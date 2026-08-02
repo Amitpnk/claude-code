@@ -365,6 +365,44 @@
     .transform-row .to { font-size: 13.5px; color: var(--white); }
     .transform-row.positive .to { color: var(--teal); }
 
+    /* ── WHY CLAUDE CODE ── */
+    .tool-chips { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 26px; }
+    .tool-chip {
+      font-family: var(--mono);
+      font-size: 12.5px;
+      color: var(--muted);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 6px 14px;
+      text-decoration: line-through;
+      text-decoration-color: rgba(224,92,92,0.5);
+    }
+    .why-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+    .why-item {
+      display: flex;
+      gap: 13px;
+      align-items: flex-start;
+      background: var(--surface);
+      border: 1px solid rgba(10,191,188,0.28);
+      border-radius: var(--radius);
+      padding: 15px 18px;
+    }
+    .why-item.wide { grid-column: 1 / -1; border-color: rgba(10,191,188,0.5); background: rgba(10,191,188,0.06); }
+    .why-item .star {
+      font-family: var(--mono);
+      color: var(--teal);
+      font-size: 15px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .why-item .wt { font-size: 15px; font-weight: 600; color: var(--white); }
+    .why-item .wd { font-size: 12.5px; color: var(--label); margin-top: 3px; line-height: 1.5; }
+
     /* ── ROADMAP ── */
     .roadmap-list { display: flex; flex-direction: column; gap: 10px; }
     .roadmap-item {
@@ -459,7 +497,7 @@
       .stage { height: auto; min-height: calc(100vh - 3px - 53px - 64px); }
       .slide { position: relative; padding: 28px 24px; opacity: 1; transform: none; display: none; }
       .slide.active { display: flex; }
-      .split-two, .two-pane, .compare-two, .num-grid { grid-template-columns: 1fr; }
+      .split-two, .two-pane, .compare-two, .num-grid, .why-list { grid-template-columns: 1fr; }
       .flow { flex-direction: column; }
       .flow-arrow { transform: rotate(90deg); justify-content: flex-start; padding-left: 8px; }
     }
@@ -643,6 +681,27 @@
 
   <!-- SLIDE 10 -->
   <section class="slide">
+    <div class="kicker">Same category, different league</div>
+    <h2>Why Claude Code?</h2>
+    <div class="subtitle">Cursor, Windsurf, Codex, Copilot, Replit — all capable. Here's where Claude Code pulls ahead.</div>
+    <div class="tool-chips">
+      <span class="tool-chip">Cursor</span>
+      <span class="tool-chip">Windsurf</span>
+      <span class="tool-chip">Codex</span>
+      <span class="tool-chip">Copilot</span>
+      <span class="tool-chip">Replit</span>
+    </div>
+    <div class="why-list">
+      <div class="why-item"><span class="star">&#9733;</span><div><div class="wt">Best raw coding intelligence</div><div class="wd">Highest-quality code generation for hard, real-world problems.</div></div></div>
+      <div class="why-item"><span class="star">&#9733;</span><div><div class="wt">Best long-context handling</div><div class="wd">Holds large codebases in mind without losing the thread.</div></div></div>
+      <div class="why-item"><span class="star">&#9733;</span><div><div class="wt">Better at refactoring &amp; architecture</div><div class="wd">Reasons across files and systems, not just single snippets.</div></div></div>
+      <div class="why-item"><span class="star">&#9733;</span><div><div class="wt">Agentic capabilities</div><div class="wd">Plans, runs commands, edits, and verifies — end to end.</div></div></div>
+      <div class="why-item wide"><span class="star">&#9733;</span><div><div class="wt">It behaves like a senior engineer</div><div class="wd">Not autocomplete — a collaborator that reasons about trade-offs and owns the task.</div></div></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 11 -->
+  <section class="slide">
     <h2>What's coming in this series</h2>
     <div class="subtitle">&nbsp;</div>
     <div class="roadmap-list">
@@ -656,7 +715,7 @@
     </div>
   </section>
 
-  <!-- SLIDE 11 -->
+  <!-- SLIDE 12 -->
   <section class="slide">
     <h2>Key takeaways</h2>
     <div class="subtitle">&nbsp;</div>
@@ -668,7 +727,7 @@
     </div>
   </section>
 
-  <!-- SLIDE 12 -->
+  <!-- SLIDE 13 -->
   <section class="slide closing">
     <div class="next-video-tag">Next video</div>
     <h2>Claude Code Setup</h2>
