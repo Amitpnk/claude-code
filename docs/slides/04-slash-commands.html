@@ -315,6 +315,7 @@
     .table-row .path { font-family: var(--mono); font-size: 13px; color: var(--white); }
     .table-row .note { font-size: 13px; color: var(--label); }
     .table-row.cols-4 { grid-template-columns: 120px 1fr 100px 110px; }
+    .table-row.cols-5 { grid-template-columns: 110px 1fr 105px 80px 100px; }
     .table-row .col { font-size: 13px; color: var(--label); }
     .table-row .col.mono { font-family: var(--mono); font-size: 12.5px; color: var(--white); }
 
@@ -411,7 +412,7 @@
       .split-two, .two-pane, .compare-two, .num-grid { grid-template-columns: 1fr; }
       .flow { flex-direction: column; }
       .flow-arrow { transform: rotate(90deg); justify-content: flex-start; padding-left: 8px; }
-      .table-row, .table-row.cols-4 { grid-template-columns: 1fr; gap: 4px; }
+      .table-row, .table-row.cols-4, .table-row.cols-5 { grid-template-columns: 1fr; gap: 4px; }
       .table-row.head { display: none; }
     }
 
@@ -559,25 +560,25 @@
     <h2>Choosing a model with <span style="font-family:var(--mono)">/model</span></h2>
     <div class="subtitle">Four models, four jobs. Switching takes one command.</div>
     <div class="num-grid">
-      <div class="num-card"><span class="n">01</span><div><div class="t">Fable 5</div><div class="d">The most capable widely released model — built for the most demanding reasoning and long-horizon agentic work.</div></div></div>
-      <div class="num-card"><span class="n">02</span><div><div class="t">Opus 5</div><div class="d">The flagship for complex, multi-step projects: architecture, hard debugging, deep agentic coding.</div></div></div>
-      <div class="num-card"><span class="n">03</span><div><div class="t">Sonnet 5</div><div class="d">The balanced workhorse. Fast, capable, and the right default for everyday coding and research.</div></div></div>
-      <div class="num-card"><span class="n">04</span><div><div class="t">Haiku 4.5</div><div class="d">The fastest and cheapest. Use it for simple, repetitive, or exploratory work that needs no deep reasoning.</div></div></div>
+      <div class="num-card"><span class="n">01</span><div><div class="t">Fable 5</div><div class="d">A highly capable brain that answers questions, writes, codes, and analyses documents — the top tier, for the most demanding reasoning and long-horizon work.</div></div></div>
+      <div class="num-card"><span class="n">02</span><div><div class="t">Opus 5</div><div class="d">Built for intense, multi-step projects, advanced writing, and coding. Slower and pricier than Sonnet, but it handles complex challenges best.</div></div></div>
+      <div class="num-card"><span class="n">03</span><div><div class="t">Sonnet 5</div><div class="d">The middle ground — the most popular, fast, balanced model for everyday coding, writing, and research.</div></div></div>
+      <div class="num-card"><span class="n">04</span><div><div class="t">Haiku 4.5</div><div class="d">The fastest and cheapest. Use it for simple, repetitive, or exploratory tasks where you don't need deep reasoning.</div></div></div>
     </div>
   </section>
 
   <!-- SLIDE 10 -->
   <section class="slide">
-    <h2>How they compare</h2>
-    <div class="subtitle">&nbsp;</div>
+    <h2>The difference, side by side</h2>
+    <div class="subtitle">Same four models — now on the axes you actually choose by.</div>
     <div class="table-list">
-      <div class="table-row head cols-4"><span>Model</span><span>Best for</span><span>Context</span><span>Cost / 1M</span></div>
-      <div class="table-row cols-4"><span class="scope">Fable 5</span><span class="col">Hardest reasoning, long-horizon agents</span><span class="col mono">1M</span><span class="col mono">$10 / $50</span></div>
-      <div class="table-row cols-4"><span class="scope">Opus 5</span><span class="col">Complex agentic coding, architecture</span><span class="col mono">1M</span><span class="col mono">$5 / $25</span></div>
-      <div class="table-row cols-4"><span class="scope">Sonnet 5</span><span class="col">Everyday coding, writing, research</span><span class="col mono">1M</span><span class="col mono">$3 / $15</span></div>
-      <div class="table-row cols-4"><span class="scope">Haiku 4.5</span><span class="col">Simple, high-volume, exploratory tasks</span><span class="col mono">200K</span><span class="col mono">$1 / $5</span></div>
+      <div class="table-row head cols-5"><span>Model</span><span>Reach for it when</span><span>Speed</span><span>Context</span><span>Cost / 1M</span></div>
+      <div class="table-row cols-5"><span class="scope">Fable 5</span><span class="col">The problem is genuinely hard or runs for hours</span><span class="col mono">Slowest</span><span class="col mono">1M</span><span class="col mono">$10 / $50</span></div>
+      <div class="table-row cols-5"><span class="scope">Opus 5</span><span class="col">Multi-step projects, architecture, deep debugging</span><span class="col mono">Slower</span><span class="col mono">1M</span><span class="col mono">$5 / $25</span></div>
+      <div class="table-row cols-5"><span class="scope">Sonnet 5</span><span class="col">Everyday coding, writing, and research</span><span class="col mono">Fast</span><span class="col mono">1M</span><span class="col mono">$3 / $15</span></div>
+      <div class="table-row cols-5"><span class="scope">Haiku 4.5</span><span class="col">Simple, repetitive, or exploratory work</span><span class="col mono">Fastest</span><span class="col mono">200K</span><span class="col mono">$1 / $5</span></div>
     </div>
-    <div class="footnote">Cost = input / output per million tokens, Anthropic API list price. Claude Code subscriptions bill on plan limits, not per token — the ratios are what matter here.</div>
+    <div class="footnote">Deeper reasoning costs latency and money — that trade runs top to bottom. Cost = input / output per million tokens (Anthropic API list price); Claude Code subscriptions bill on plan limits, so read the ratios, not the dollars.</div>
   </section>
 
   <!-- SLIDE 11 -->
