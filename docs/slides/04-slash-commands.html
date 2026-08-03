@@ -314,6 +314,16 @@
     .table-row .scope { font-family: var(--mono); font-size: 13px; color: var(--teal); }
     .table-row .path { font-family: var(--mono); font-size: 13px; color: var(--white); }
     .table-row .note { font-size: 13px; color: var(--label); }
+    .table-row.cols-4 { grid-template-columns: 120px 1fr 100px 110px; }
+    .table-row .col { font-size: 13px; color: var(--label); }
+    .table-row .col.mono { font-family: var(--mono); font-size: 12.5px; color: var(--white); }
+
+    .footnote {
+      font-family: var(--mono);
+      font-size: 11.5px;
+      color: var(--muted);
+      margin-top: 16px;
+    }
 
     .lead-statement {
       font-size: 19px;
@@ -401,7 +411,7 @@
       .split-two, .two-pane, .compare-two, .num-grid { grid-template-columns: 1fr; }
       .flow { flex-direction: column; }
       .flow-arrow { transform: rotate(90deg); justify-content: flex-start; padding-left: 8px; }
-      .table-row { grid-template-columns: 1fr; gap: 4px; }
+      .table-row, .table-row.cols-4 { grid-template-columns: 1fr; gap: 4px; }
       .table-row.head { display: none; }
     }
 
@@ -418,7 +428,7 @@
   <a class="back-link" href="../index.html">&larr; Back to series</a>
   <div class="deck-meta">
     <span>Video 4 · Slash Commands</span>
-    <span class="counter"><span id="slideNum">1</span> / <span id="slideTotal">11</span></span>
+    <span class="counter"><span id="slideNum">1</span> / <span id="slideTotal">20</span></span>
   </div>
 </div>
 
@@ -440,18 +450,20 @@
     <div class="num-grid">
       <div class="num-card"><span class="n">01</span><div><div class="t">What slash commands are and why they beat typing prose</div></div></div>
       <div class="num-card"><span class="n">02</span><div><div class="t">The commands you'll use in nearly every session</div></div></div>
-      <div class="num-card"><span class="n">03</span><div><div class="t">Context, memory &amp; diagnostics commands</div></div></div>
-      <div class="num-card"><span class="n">04</span><div><div class="t">Building a habit loop that saves you time and tokens</div></div></div>
+      <div class="num-card"><span class="n">03</span><div><div class="t">Sessions: what they are and how to run them well</div></div></div>
+      <div class="num-card"><span class="n">04</span><div><div class="t">Models: picking the right one with <span style="font-family:var(--mono)">/model</span></div></div></div>
+      <div class="num-card"><span class="n">05</span><div><div class="t">Usage, cost &amp; configuration commands</div></div></div>
+      <div class="num-card"><span class="n">06</span><div><div class="t">Building a habit loop that saves you time and tokens</div></div></div>
     </div>
   </section>
 
   <!-- SLIDE 3 -->
   <section class="slide">
     <h2>What are slash commands?</h2>
-    <div class="subtitle">Not natural language. Direct, unambiguous instructions.</div>
+    <div class="subtitle">Shortcuts you type inside a Claude Code session, starting with <span style="font-family:var(--mono);color:var(--teal)">/</span>, that trigger a predefined action or workflow instantly — without writing out a full prompt.</div>
     <div class="two-pane">
       <div class="check-list">
-        <div class="check-item"><span class="icon">&#10003;</span><div><div class="t">Instant &amp; unambiguous</div><div class="d">No prompt parsing — Claude executes the command directly.</div></div></div>
+        <div class="check-item"><span class="icon">&#10003;</span><div><div class="t">Instant &amp; unambiguous</div><div class="d">No prompt to parse — the command runs the action directly.</div></div></div>
         <div class="check-item"><span class="icon">&#10003;</span><div><div class="t">Autocomplete</div><div class="d">Type / and tab through every available command.</div></div></div>
         <div class="check-item"><span class="icon">&#10003;</span><div><div class="t">Built-in vs custom</div><div class="d">Today is the built-in set. Writing your own comes in Video 12.</div></div></div>
       </div>
@@ -461,8 +473,9 @@
 &gt; <span class="c-h">/</span>
   /clear        /compact
   /model        /resume
-  /status       /cost
-  /permissions  /review</pre>
+  /rename       /export
+  /usage        /stats
+  /config       /permissions</pre>
       </div>
     </div>
   </section>
@@ -483,6 +496,54 @@
 
   <!-- SLIDE 5 -->
   <section class="slide">
+    <h2>What is a session?</h2>
+    <div class="subtitle">One conversation with Claude Code — everything from <span style="font-family:var(--mono)">claude</span> to <span style="font-family:var(--mono)">/exit</span>.</div>
+    <div class="two-pane">
+      <div class="check-list">
+        <div class="check-item"><span class="icon">&#10003;</span><div><div class="t">It has a unique ID</div><div class="d">Plus the full message history, every file read, every tool result, and the working directory.</div></div></div>
+        <div class="check-item"><span class="icon">&#10003;</span><div><div class="t">Saved automatically</div><div class="d">Written to ~/.claude/projects/ — nothing to remember to do.</div></div></div>
+        <div class="check-item"><span class="icon">&#10003;</span><div><div class="t">Resumable any time</div><div class="d">Even after you close the terminal. Pick up exactly where you left off.</div></div></div>
+      </div>
+      <div class="code-block">
+        <div class="code-title">resuming work</div>
+        <pre><span class="c-prompt">~/project $</span> <span class="c-h">claude -r</span>
+  <span class="c-prompt"># pick a past session to continue</span>
+
+<span class="c-prompt">&gt;</span> <span class="c-h">/resume</span>
+  <span class="c-prompt"># jump to another session</span>
+  <span class="c-prompt"># mid-session, then come back</span></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 6 -->
+  <section class="slide">
+    <h2>Session discipline</h2>
+    <div class="subtitle">Five habits that keep a session sharp instead of sprawling.</div>
+    <div class="num-grid">
+      <div class="num-card"><span class="n">01</span><div><div class="t">One session = one task</div><div class="d">Mixed goals mean mixed context — and worse answers.</div></div></div>
+      <div class="num-card"><span class="n">02</span><div><div class="t">Name it immediately</div><div class="d">A named session is one you can actually find later.</div></div></div>
+      <div class="num-card"><span class="n">03</span><div><div class="t">Commit frequently within it</div><div class="d">Small checkpoints make it safe to keep going.</div></div></div>
+      <div class="num-card"><span class="n">04</span><div><div class="t">Use /btw for quick questions</div><div class="d">Ask a side question without derailing the main thread.</div></div></div>
+      <div class="num-card"><span class="n">05</span><div><div class="t">Export before a big refactor</div><div class="d">A written record of the reasoning, not just the diff.</div></div></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 7 -->
+  <section class="slide">
+    <h2>Session commands in practice</h2>
+    <div class="subtitle">&nbsp;</div>
+    <div class="table-list">
+      <div class="table-row head"><span>Command</span><span>What it does</span><span>Example</span></div>
+      <div class="table-row"><span class="scope">/rename</span><span class="col">Names the current session</span><span class="col mono">/rename intro session</span></div>
+      <div class="table-row"><span class="scope">/btw</span><span class="col">Quick aside without losing the thread</span><span class="col mono">/btw what is a hook in react</span></div>
+      <div class="table-row"><span class="scope">/export</span><span class="col">Writes the session out to a file</span><span class="col mono">/export file.md</span></div>
+      <div class="table-row"><span class="scope">/resume</span><span class="col">Switches to another saved session</span><span class="col mono">/resume</span></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 8 -->
+  <section class="slide">
     <h2>Context &amp; diagnostics</h2>
     <div class="subtitle">Know what's happening under the hood before it surprises you.</div>
     <div class="num-grid cols-1">
@@ -493,7 +554,83 @@
     </div>
   </section>
 
-  <!-- SLIDE 6 -->
+  <!-- SLIDE 9 -->
+  <section class="slide">
+    <h2>Choosing a model with <span style="font-family:var(--mono)">/model</span></h2>
+    <div class="subtitle">Four models, four jobs. Switching takes one command.</div>
+    <div class="num-grid">
+      <div class="num-card"><span class="n">01</span><div><div class="t">Fable 5</div><div class="d">The most capable widely released model — built for the most demanding reasoning and long-horizon agentic work.</div></div></div>
+      <div class="num-card"><span class="n">02</span><div><div class="t">Opus 5</div><div class="d">The flagship for complex, multi-step projects: architecture, hard debugging, deep agentic coding.</div></div></div>
+      <div class="num-card"><span class="n">03</span><div><div class="t">Sonnet 5</div><div class="d">The balanced workhorse. Fast, capable, and the right default for everyday coding and research.</div></div></div>
+      <div class="num-card"><span class="n">04</span><div><div class="t">Haiku 4.5</div><div class="d">The fastest and cheapest. Use it for simple, repetitive, or exploratory work that needs no deep reasoning.</div></div></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 10 -->
+  <section class="slide">
+    <h2>How they compare</h2>
+    <div class="subtitle">&nbsp;</div>
+    <div class="table-list">
+      <div class="table-row head cols-4"><span>Model</span><span>Best for</span><span>Context</span><span>Cost / 1M</span></div>
+      <div class="table-row cols-4"><span class="scope">Fable 5</span><span class="col">Hardest reasoning, long-horizon agents</span><span class="col mono">1M</span><span class="col mono">$10 / $50</span></div>
+      <div class="table-row cols-4"><span class="scope">Opus 5</span><span class="col">Complex agentic coding, architecture</span><span class="col mono">1M</span><span class="col mono">$5 / $25</span></div>
+      <div class="table-row cols-4"><span class="scope">Sonnet 5</span><span class="col">Everyday coding, writing, research</span><span class="col mono">1M</span><span class="col mono">$3 / $15</span></div>
+      <div class="table-row cols-4"><span class="scope">Haiku 4.5</span><span class="col">Simple, high-volume, exploratory tasks</span><span class="col mono">200K</span><span class="col mono">$1 / $5</span></div>
+    </div>
+    <div class="footnote">Cost = input / output per million tokens, Anthropic API list price. Claude Code subscriptions bill on plan limits, not per token — the ratios are what matter here.</div>
+  </section>
+
+  <!-- SLIDE 11 -->
+  <section class="slide">
+    <h2>Model IDs</h2>
+    <div class="subtitle">What you'll type when a tool or config asks for the exact name.</div>
+    <div class="table-list">
+      <div class="table-row"><span class="scope">Fable 5</span><span class="path">claude-fable-5</span><span class="note">Most capable; highest cost</span></div>
+      <div class="table-row"><span class="scope">Opus 5</span><span class="path">claude-opus-5</span><span class="note">Hard reasoning &amp; agentic coding</span></div>
+      <div class="table-row"><span class="scope">Sonnet 5</span><span class="path">claude-sonnet-5</span><span class="note">Balanced speed and capability</span></div>
+      <div class="table-row"><span class="scope">Haiku 4.5</span><span class="path">claude-haiku-4-5</span><span class="note">Fastest and cheapest</span></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 12 -->
+  <section class="slide">
+    <h2>The power-user pattern</h2>
+    <div class="subtitle">Match the model to the phase, not to the project.</div>
+    <div class="flow">
+      <div class="flow-step"><div class="t">Plan on Opus</div><div class="d">architecture &amp; specs</div></div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step"><div class="t">/model</div><div class="d">switch mid-session</div></div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step"><div class="t">Build on Sonnet</div><div class="d">reliable code generation</div></div>
+    </div>
+    <p class="lead-statement">Use the stronger model where the <span class="hl">thinking</span> happens — architecture, specs, hard decisions. Once those are made, switch down for implementation: the thinking is done, and you just need dependable output.</p>
+  </section>
+
+  <!-- SLIDE 13 -->
+  <section class="slide">
+    <h2>Usage, cost &amp; insight</h2>
+    <div class="subtitle">Know what you're spending before the plan tells you.</div>
+    <div class="num-grid cols-1">
+      <div class="num-card"><span class="n">01</span><div><div class="t">/usage &nbsp;·&nbsp; /cost</div><div class="d">Where the current session stands — check it before a long run finishes, not after.</div></div></div>
+      <div class="num-card"><span class="n">02</span><div><div class="t">/stats</div><div class="d">Your usage over time, beyond this one session.</div></div></div>
+      <div class="num-card"><span class="n">03</span><div><div class="t">/insights</div><div class="d">Regenerates a report on how you're working — and where you could work better.</div></div></div>
+      <div class="num-card"><span class="n">04</span><div><div class="t">/extra-usage</div><div class="d">Top up when you hit a limit mid-task instead of losing the thread.</div></div></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 14 -->
+  <section class="slide">
+    <h2>Configuration &amp; control</h2>
+    <div class="subtitle">&nbsp;</div>
+    <div class="num-grid cols-1">
+      <div class="num-card"><span class="n">01</span><div><div class="t">/config</div><div class="d">Change settings without leaving the session — model, theme, and more.</div></div></div>
+      <div class="num-card"><span class="n">02</span><div><div class="t">/permissions</div><div class="d">Allow or deny tools explicitly, so you stop answering the same prompt every run.</div></div></div>
+      <div class="num-card"><span class="n">03</span><div><div class="t">/theme</div><div class="d">Switch the colour scheme to match your terminal.</div></div></div>
+      <div class="num-card"><span class="n">04</span><div><div class="t">/voice</div><div class="d">Speak the prompt instead of typing it — e.g. "explain the project structure to me."</div></div></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 15 -->
   <section class="slide">
     <h2>Review &amp; collaboration</h2>
     <div class="subtitle">Commands that connect Claude Code to your team's workflow.</div>
@@ -504,59 +641,60 @@
     </div>
   </section>
 
-  <!-- SLIDE 7 -->
+  <!-- SLIDE 16 -->
   <section class="slide">
     <h2>The habit loop</h2>
     <div class="subtitle">&nbsp;</div>
     <div class="flow">
-      <div class="flow-step"><div class="t">Start session</div><div class="d">clean context</div></div>
+      <div class="flow-step"><div class="t">/rename</div><div class="d">name it up front</div></div>
       <div class="flow-arrow">&rarr;</div>
-      <div class="flow-step"><div class="t">Work in steps</div><div class="d">scoped prompts</div></div>
+      <div class="flow-step"><div class="t">/model</div><div class="d">plan, then build</div></div>
       <div class="flow-arrow">&rarr;</div>
       <div class="flow-step"><div class="t">/compact</div><div class="d">near context limit</div></div>
       <div class="flow-arrow">&rarr;</div>
       <div class="flow-step"><div class="t">/clear</div><div class="d">between tasks</div></div>
       <div class="flow-arrow">&rarr;</div>
-      <div class="flow-step"><div class="t">/cost</div><div class="d">before wrapping up</div></div>
+      <div class="flow-step"><div class="t">/usage</div><div class="d">before wrapping up</div></div>
     </div>
   </section>
 
-  <!-- SLIDE 8 -->
+  <!-- SLIDE 17 -->
   <section class="slide">
     <h2>Common mistakes</h2>
     <div class="subtitle">&nbsp;</div>
     <div class="split-two">
       <div class="split-col good">
         <h4>Do this</h4>
-        <ul><li>/clear between unrelated tasks</li><li>Check /cost on long sessions</li><li>Run /help when a command name slips your mind</li></ul>
+        <ul><li>One session per task, named on day one</li><li>Check /usage on long sessions</li><li>Match the model to the phase of the work</li><li>Run /help when a command name slips your mind</li></ul>
       </div>
       <div class="split-col bad">
         <h4>Not this</h4>
-        <ul><li>Never clearing context across weeks of work</li><li>Ignoring permission prompts instead of reading /permissions</li><li>Guessing at command names instead of autocompleting</li></ul>
+        <ul><li>One endless session across weeks of unrelated work</li><li>Staying on the biggest model for every keystroke</li><li>Ignoring permission prompts instead of setting /permissions</li><li>Guessing at command names instead of autocompleting</li></ul>
       </div>
     </div>
   </section>
 
-  <!-- SLIDE 9 -->
+  <!-- SLIDE 18 -->
   <section class="slide">
     <h2>Built-in today. Custom next.</h2>
     <div class="subtitle">&nbsp;</div>
     <p class="lead-statement">These built-in commands cover the mechanics of running a session well. But the real leverage comes when you encode <span class="hl">your own</span> repeated workflows as commands — that's the entire subject of Video 12.</p>
   </section>
 
-  <!-- SLIDE 10 -->
+  <!-- SLIDE 19 -->
   <section class="slide">
     <h2>Key takeaways</h2>
     <div class="subtitle">&nbsp;</div>
     <div class="takeaway-list">
       <div class="takeaway-item pos"><span class="mark">&#10003;</span><p>Slash commands are direct instructions, not prose — faster and unambiguous.</p></div>
-      <div class="takeaway-item pos"><span class="mark">&#10003;</span><p>/clear, /compact, /model, /resume, and /help cover most day-to-day needs.</p></div>
-      <div class="takeaway-item pos"><span class="mark">&#10003;</span><p>/status, /cost, /doctor, and /permissions keep you informed instead of surprised.</p></div>
-      <div class="takeaway-item pos"><span class="mark">&#10003;</span><p>Build the habit loop: clear starts, compact near limits, cost checks before you wrap up.</p></div>
+      <div class="takeaway-item pos"><span class="mark">&#10003;</span><p>A session is one conversation, saved automatically and resumable. Keep it to one task, and name it.</p></div>
+      <div class="takeaway-item pos"><span class="mark">&#10003;</span><p>/model is a phase decision: plan on the stronger model, implement on the faster one.</p></div>
+      <div class="takeaway-item pos"><span class="mark">&#10003;</span><p>/usage, /stats, /status, and /permissions keep you informed instead of surprised.</p></div>
+      <div class="takeaway-item pos"><span class="mark">&#10003;</span><p>Build the habit loop: named starts, compact near limits, usage checks before you wrap up.</p></div>
     </div>
   </section>
 
-  <!-- SLIDE 11 -->
+  <!-- SLIDE 20 -->
   <section class="slide closing">
     <div class="next-video-tag">Next video</div>
     <h2>Making Code Changes the Right Way</h2>
