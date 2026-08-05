@@ -272,6 +272,22 @@
     .code-block .c-h { color: var(--teal); }
     .code-block .c-prompt { color: var(--muted); }
 
+    .figure {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      display: flex;
+      justify-content: center;
+    }
+    .figure img {
+      display: block;
+      max-width: 100%;
+      max-height: 54vh;
+      height: auto;
+      border-radius: 6px;
+    }
+
     .compare-two {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -453,21 +469,81 @@
     <h2>What we cover today</h2>
     <div class="subtitle">&nbsp;</div>
     <div class="num-grid">
-      <div class="num-card"><span class="n">01</span><div><div class="t">What actually fills the context window</div></div></div>
+      <div class="num-card"><span class="n">01</span><div><div class="t">What context and the context window actually are</div></div></div>
       <div class="num-card"><span class="n">02</span><div><div class="t">What happens when it saturates</div></div></div>
       <div class="num-card"><span class="n">03</span><div><div class="t">The /status, /compact, /clear discipline</div></div></div>
       <div class="num-card"><span class="n">04</span><div><div class="t">Building session hygiene that scales</div></div></div>
     </div>
   </section>
 
-  <!-- SLIDE 3 -->
+  <!-- SLIDE 2b -->
   <section class="slide">
-    <h2>What is the context window?</h2>
+    <div class="kicker">Fundamentals</div>
+    <h2>What is context?</h2>
+    <div class="subtitle">Not just your last message.</div>
+    <p class="lead-statement">Context is <span class="hl">all the information available</span> to understand something correctly.</p>
+  </section>
+
+  <!-- SLIDE 2c -->
+  <section class="slide">
+    <h2>Where context comes from</h2>
+    <div class="subtitle">&nbsp;</div>
+    <div class="num-grid">
+      <div class="num-card"><span class="n">01</span><div><div class="t">The codebase</div></div></div>
+      <div class="num-card"><span class="n">02</span><div><div class="t">Spec documents</div></div></div>
+      <div class="num-card"><span class="n">03</span><div><div class="t">Jira user stories</div></div></div>
+      <div class="num-card"><span class="n">04</span><div><div class="t">Previous AI chat history</div></div></div>
+      <div class="num-card"><span class="n">05</span><div><div class="t">Git history</div></div></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 2d -->
+  <section class="slide">
+    <h2>What is a context window?</h2>
+    <div class="subtitle">Not the same thing as context itself.</div>
+    <p class="lead-statement">A context window is the amount of information — in tokens — that a model like Claude Code can see and remember at once while generating a response. Think of it as the model's <span class="hl">working memory</span>: the maximum amount of context it can hold at a time.</p>
+  </section>
+
+  <!-- SLIDE 3 -->
+  <!-- <section class="slide">
+    <h2>How to think about it</h2>
     <div class="subtitle">Finite. Not magic. Not infinite.</div>
     <div class="check-list">
       <div class="check-item"><span class="icon">&#10003;</span><div><div class="t">Everything counts</div><div class="d">Every message, every file read, every tool result adds to it.</div></div></div>
       <div class="check-item"><span class="icon">&#10003;</span><div><div class="t">It's finite</div><div class="d">There's a hard limit — it doesn't scroll on forever for free.</div></div></div>
       <div class="check-item"><span class="icon">&#10003;</span><div><div class="t">Treat it like RAM</div><div class="d">Managed deliberately, not filled carelessly and forgotten about.</div></div></div>
+    </div>
+  </section> -->
+
+  <!-- SLIDE 3b -->
+  <section class="slide">
+    <h2>Context window, by the numbers</h2>
+    <div class="subtitle">&nbsp;</div>
+    <div class="num-grid">
+      <div class="num-card"><span class="n">01</span><div><div class="t">200k tokens</div><div class="d">Claude Code's context window holds up to 200k tokens per session.</div></div></div>
+      <div class="num-card"><span class="n">02</span><div><div class="t">Fresh per session</div><div class="d">Every new session starts with a completely empty context window.</div></div></div>
+      <div class="num-card"><span class="n">03</span><div><div class="t">Both sides count</div><div class="d">Your messages and Claude's replies both consume the same token budget.</div></div></div>
+      <div class="num-card"><span class="n">04</span><div><div class="t">Replies cost ~6x more</div><div class="d">Claude's responses consume roughly 6x more tokens than your prompts.</div></div></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 3c -->
+  <section class="slide">
+    <h2>Context window &amp; subagents</h2>
+    <div class="subtitle">&nbsp;</div>
+    <div class="num-grid cols-1">
+      <div class="num-card"><span class="n">01</span><div><div class="t">Full history, every request</div><div class="d">Each request resends the entire conversation from scratch, not just the new message.</div></div></div>
+      <div class="num-card"><span class="n">02</span><div><div class="t">Subagents get isolated windows</div><div class="d">A subagent's context window is completely separate from the main session's.</div></div></div>
+      <div class="num-card"><span class="n">03</span><div><div class="t">Subagents return summaries only</div><div class="d">The main session gets back a summary, not the subagent's full working history.</div></div></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 3d -->
+  <section class="slide">
+    <h2>Why full re-sends add up</h2>
+    <div class="subtitle">Every request resends the whole conversation — cost grows triangularly, not linearly.</div>
+    <div class="figure">
+      <img src="img/Context-window.png" alt="Chart showing each turn re-sending all prior conversation history: by turn 10 a single request costs 2,000 tokens, and the 10-turn session totals 11,000 tokens versus 2,000 if cost were linear — 5.5x more expensive than expected. Fresh sessions per feature cost 4x less than one long session.">
     </div>
   </section>
 
@@ -483,8 +559,17 @@
     </div>
   </section>
 
-  <!-- SLIDE 5 -->
+  <!-- SLIDE 4b -->
   <section class="slide">
+    <h2>Where those 200k tokens go</h2>
+    <div class="subtitle">Fixed overhead, conversation history, tool results — then the buffer reserved for autocompact.</div>
+    <div class="figure">
+      <img src="img/Context-window-tokens.png" alt="Breakdown of Claude Code's 200k token context window: system prompt (~6k), tool schemas (~8k), CLAUDE.md, conversation history (~45% in long sessions), tool results, Skills + MCP, an autocompact buffer (~33k reserved), and remaining free space.">
+    </div>
+  </section>
+
+  <!-- SLIDE 5 -->
+  <!-- <section class="slide">
     <h2>What happens when it saturates</h2>
     <div class="subtitle">&nbsp;</div>
     <div class="transform-rows">
@@ -492,7 +577,7 @@
       <div class="transform-row"><div class="from">No one notices yet</div><div class="arrow">&rarr;</div><div class="to">Code quietly starts contradicting itself — no error, just drift.</div></div>
       <div class="transform-row positive"><div class="from">Caught early with /status</div><div class="arrow">&rarr;</div><div class="to">You compact or clear before quality ever degrades.</div></div>
     </div>
-  </section>
+  </section> -->
 
   <!-- SLIDE 6 -->
   <section class="slide">
@@ -500,7 +585,8 @@
     <div class="subtitle">&nbsp;</div>
     <div class="table-list">
       <div class="table-row head"><span>Command</span><span>What it does</span><span>When to use it</span></div>
-      <div class="table-row"><span class="scope">/status</span><span class="path">Shows current context usage</span><span class="note">Check it periodically, not just when worried</span></div>
+      <div class="table-row"><span class="scope">/context</span><span class="path">Shows current context usage</span><span class="note">Check it periodically, not just when worried</span></div>
+      <div class="table-row"><span class="scope">/status</span><span class="path">Shows status</span><span class="note">Check it periodically, not just when worried</span></div>
       <div class="table-row"><span class="scope">/compact</span><span class="path">Summarizes &amp; trims history</span><span class="note">Approaching the limit, need continuity</span></div>
       <div class="table-row"><span class="scope">/clear</span><span class="path">Wipes everything</span><span class="note">Switching to a fully unrelated task</span></div>
     </div>
@@ -551,9 +637,11 @@
     <h2>Key takeaways</h2>
     <div class="subtitle">&nbsp;</div>
     <div class="takeaway-list">
-      <div class="takeaway-item pos"><span class="mark">&#10003;</span><p>The context window is finite — conversation, file reads, and tool outputs all consume it.</p></div>
+      <div class="takeaway-item pos"><span class="mark">&#10003;</span><p>Context is all the information available to understand something correctly — the context window is how much of it the model can hold at once.</p></div>
+      <div class="takeaway-item pos"><span class="mark">&#10003;</span><p>Claude Code's window holds 200k tokens, and every request resends the full conversation from scratch.</p></div>
       <div class="takeaway-item pos"><span class="mark">&#10003;</span><p>Saturation causes silent drift before it causes visible errors — catch it early.</p></div>
       <div class="takeaway-item pos"><span class="mark">&#10003;</span><p>/status to check, /compact to trim with continuity, /clear to wipe fully.</p></div>
+      <div class="takeaway-item pos"><span class="mark">&#10003;</span><p>Subagents run in their own isolated window and hand back only a summary — not their full history.</p></div>
       <div class="takeaway-item pos"><span class="mark">&#10003;</span><p>Good context hygiene is what makes Skills and SubAgents effective later in the series.</p></div>
     </div>
   </section>
