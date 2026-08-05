@@ -89,4 +89,46 @@ describe("projects API", () => {
       "low one",
     ]);
   });
+
+  it("deletes a task", async () => {
+    const created = await request(app).post("/api/projects").send({ name: "Delete Task" });
+    const projectId = created.body.id;
+    const task = await request(app)
+      .post(`/api/projects/${projectId}/tasks`)
+      .send({ title: "Doomed task" });
+
+    const del = await request(app).delete(`/api/projects/${projectId}/tasks/${task.body.id}`);
+    expect(del.status).toBe(204);
+
+    const res = await request(app).get(`/api/projects/${projectId}`);
+    expect(res.body.tasks).toHaveLength(0);
+  });
+
+  it("404s deleting a task that doesn't belong to the project", async () => {
+    const created = await request(app).post("/api/projects").send({ name: "Wrong Project" });
+    const other = await request(app).post("/api/projects").send({ name: "Other Project" });
+    const task = await request(app)
+      .post(`/api/projects/${other.body.id}/tasks`)
+      .send({ title: "Not yours" });
+
+    const del = await request(app).delete(`/api/projects/${created.body.id}/tasks/${task.body.id}`);
+    expect(del.status).toBe(404);
+  });
+
+  it("deletes a project and cascades its tasks", async () => {
+    const created = await request(app).post("/api/projects").send({ name: "Delete Project" });
+    const projectId = created.body.id;
+    await request(app).post(`/api/projects/${projectId}/tasks`).send({ title: "Goes too" });
+
+    const del = await request(app).delete(`/api/projects/${projectId}`);
+    expect(del.status).toBe(204);
+
+    const res = await request(app).get(`/api/projects/${projectId}`);
+    expect(res.status).toBe(404);
+  });
+
+  it("404s deleting a project that doesn't exist", async () => {
+    const del = await request(app).delete("/api/projects/999999");
+    expect(del.status).toBe(404);
+  });
 });

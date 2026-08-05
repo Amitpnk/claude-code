@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { eq, sql } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
 import { db } from "../db/client";
 import { projects, tasks } from "../db/schema";
 import { NotFoundError, ValidationError } from "../lib/errors";
@@ -52,6 +52,18 @@ projectsRouter.get("/api/projects/:id", async (req, res, next) => {
   }
 });
 
+projectsRouter.delete("/api/projects/:id", async (req, res, next) => {
+  try {
+    const id = Number(req.params.id);
+    const project = await db.query.projects.findFirst({ where: eq(projects.id, id) });
+    if (!project) throw new NotFoundError("Project not found");
+    await db.delete(projects).where(eq(projects.id, id));
+    res.status(204).send();
+  } catch (err) {
+    next(err);
+  }
+});
+
 projectsRouter.post("/api/projects/:id/tasks", async (req, res, next) => {
   try {
     const projectId = Number(req.params.id);
@@ -68,6 +80,21 @@ projectsRouter.post("/api/projects/:id/tasks", async (req, res, next) => {
       .values({ projectId, title, ...(priority && { priority }) })
       .returning();
     res.status(201).json(created);
+  } catch (err) {
+    next(err);
+  }
+});
+
+projectsRouter.delete("/api/projects/:projectId/tasks/:id", async (req, res, next) => {
+  try {
+    const projectId = Number(req.params.projectId);
+    const id = Number(req.params.id);
+    const task = await db.query.tasks.findFirst({
+      where: and(eq(tasks.id, id), eq(tasks.projectId, projectId)),
+    });
+    if (!task) throw new NotFoundError("Task not found");
+    await db.delete(tasks).where(eq(tasks.id, id));
+    res.status(204).send();
   } catch (err) {
     next(err);
   }
