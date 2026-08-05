@@ -272,6 +272,22 @@
     .code-block .c-h { color: var(--teal); }
     .code-block .c-prompt { color: var(--muted); }
 
+    .figure {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      display: flex;
+      justify-content: center;
+    }
+    .figure img {
+      display: block;
+      max-width: 100%;
+      max-height: 54vh;
+      height: auto;
+      border-radius: 6px;
+    }
+
     .compare-two {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -522,6 +538,15 @@
     </div>
   </section>
 
+  <!-- SLIDE 3d -->
+  <section class="slide">
+    <h2>Why full re-sends add up</h2>
+    <div class="subtitle">Every request resends the whole conversation — cost grows triangularly, not linearly.</div>
+    <div class="figure">
+      <img src="img/Context-window.png" alt="Chart showing each turn re-sending all prior conversation history: by turn 10 a single request costs 2,000 tokens, and the 10-turn session totals 11,000 tokens versus 2,000 if cost were linear — 5.5x more expensive than expected. Fresh sessions per feature cost 4x less than one long session.">
+    </div>
+  </section>
+
   <!-- SLIDE 4 -->
   <section class="slide">
     <h2>What fills it up</h2>
@@ -531,6 +556,15 @@
       <div class="num-card"><span class="n">02</span><div><div class="t">File reads</div><div class="d">The full contents of every file Claude opens to look at.</div></div></div>
       <div class="num-card"><span class="n">03</span><div><div class="t">Tool outputs</div><div class="d">Command results, search results, diffs — all of it counts.</div></div></div>
       <div class="num-card"><span class="n">04</span><div><div class="t">Long correction chains</div><div class="d">"No, not like that" repeated ten times adds up fast.</div></div></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 4b -->
+  <section class="slide">
+    <h2>Where those 200k tokens go</h2>
+    <div class="subtitle">Fixed overhead, conversation history, tool results — then the buffer reserved for autocompact.</div>
+    <div class="figure">
+      <img src="img/Context-window-tokens.png" alt="Breakdown of Claude Code's 200k token context window: system prompt (~6k), tool schemas (~8k), CLAUDE.md, conversation history (~45% in long sessions), tool results, Skills + MCP, an autocompact buffer (~33k reserved), and remaining free space.">
     </div>
   </section>
 
