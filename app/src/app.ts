@@ -27,6 +27,14 @@ app.get("/about", (_req, res) => {
   res.render("about");
 });
 
+app.get("/terms", (_req, res) => {
+  res.render("terms");
+});
+
+app.get("/privacy", (_req, res) => {
+  res.render("privacy");
+});
+
 app.get("/", async (_req, res, next) => {
   try {
     const rows = await db.query.projects.findMany({

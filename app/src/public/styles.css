@@ -41,6 +41,16 @@ a:hover { text-decoration: underline; }
 
 .app-main { max-width: 960px; margin: 0 auto; padding: 32px; }
 
+.app-footer {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  padding: 20px 32px;
+  border-top: 1px solid var(--border);
+}
+.app-footer a { color: var(--label); font-size: 13px; font-weight: 600; }
+.app-footer a:hover { color: var(--teal); text-decoration: none; }
+
 h1 { font-size: 24px; margin-bottom: 16px; }
 
 .new-project-form, .new-task-form {
