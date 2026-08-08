@@ -292,6 +292,47 @@
     .tree-block .c-file { color: var(--teal); }
     .tree-block .c-note { color: var(--muted); }
 
+    .spec-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+    .spec-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .spec-card h4 {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--teal);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .spec-card .desc {
+      font-size: 11.5px;
+      color: var(--label);
+      line-height: 1.35;
+    }
+    .spec-card pre {
+      font-family: var(--mono);
+      font-size: 10px;
+      line-height: 1.55;
+      color: var(--label);
+      background: #0D1117;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 7px 9px;
+      overflow-x: auto;
+      white-space: pre;
+    }
+    .spec-card pre .c-do { color: var(--coral); }
+
     .takeaway-list { display: flex; flex-direction: column; gap: 14px; }
     .takeaway-item { display: flex; gap: 14px; align-items: flex-start; }
     .takeaway-item .mark {
@@ -366,7 +407,7 @@
       .stage { height: auto; min-height: calc(100vh - 3px - 53px - 64px); }
       .slide { position: relative; padding: 28px 24px; opacity: 1; transform: none; display: none; }
       .slide.active { display: flex; }
-      .split-two, .two-pane, .num-grid { grid-template-columns: 1fr; }
+      .split-two, .two-pane, .num-grid, .spec-grid { grid-template-columns: 1fr; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -402,123 +443,175 @@
     <h2>What we cover today</h2>
     <div class="subtitle">&nbsp;</div>
     <div class="num-grid">
-      <div class="num-card"><span class="n">01</span><div><div class="t">What CLAUDE.md actually is</div></div></div>
-      <div class="num-card"><span class="n">02</span><div><div class="t">What to put in it — and what to leave out</div></div></div>
-      <div class="num-card"><span class="n">03</span><div><div class="t">Keeping it current as the project evolves</div></div></div>
-      <div class="num-card"><span class="n">04</span><div><div class="t">Monorepo &amp; nested CLAUDE.md patterns</div></div></div>
+      <div class="num-card"><span class="n">01</span><div><div class="t">Why CLAUDE.md exists</div></div></div>
+      <div class="num-card"><span class="n">02</span><div><div class="t">What CLAUDE.md actually is</div></div></div>
+      <div class="num-card"><span class="n">03</span><div><div class="t">Creating it — manually or with /init</div></div></div>
+      <div class="num-card"><span class="n">04</span><div><div class="t">What actually ends up inside</div></div></div>
     </div>
   </section>
 
   <!-- SLIDE 3 -->
   <section class="slide">
-    <h2>What is CLAUDE.md?</h2>
-    <div class="subtitle">Plain markdown. No special syntax. Project root.</div>
-    <div class="check-list">
-      <div class="check-item"><span class="icon">&#10003;</span><div><div class="t">Loads automatically</div><div class="d">Read at the start of every session — you never re-explain the project.</div></div></div>
-      <div class="check-item"><span class="icon">&#10003;</span><div><div class="t">Just markdown</div><div class="d">Headers and bullets. No frontmatter or special format required.</div></div></div>
-      <div class="check-item"><span class="icon">&#10003;</span><div><div class="t">Context, not enforcement</div><div class="d">It shapes behavior — it's not a hard block. For mandatory rules, use Hooks.</div></div></div>
+    <h2>Why CLAUDE.md?</h2>
+    <div class="subtitle">LLMs don't have memory.</div>
+    <div class="takeaway-list">
+      <div class="takeaway-item neg"><span class="mark">&#10007;</span><p>Claude Code can't remember anything from a previous session.</p></div>
+      <div class="takeaway-item neg"><span class="mark">&#10007;</span><p>So you end up repeating the same instructions across sessions.</p></div>
+      <div class="takeaway-item neg"><span class="mark">&#10007;</span><p>Repeating instructions is cumbersome and error-prone — easy to miss something in the prompt.</p></div>
+      <div class="takeaway-item neg"><span class="mark">&#10007;</span><p>That missed detail leads to inconsistent code generation, session to session.</p></div>
     </div>
   </section>
 
   <!-- SLIDE 4 -->
   <section class="slide">
-    <h2>What to put in it</h2>
-    <div class="subtitle">&nbsp;</div>
-    <div class="two-pane">
-      <div class="num-grid cols-1">
-        <div class="num-card"><span class="n">01</span><div><div class="t">Stack &amp; commands</div><div class="d">Runtime, framework, how to build and test</div></div></div>
-        <div class="num-card"><span class="n">02</span><div><div class="t">Conventions</div><div class="d">Naming, style rules, error handling patterns</div></div></div>
-        <div class="num-card"><span class="n">03</span><div><div class="t">Do-nots</div><div class="d">Explicit guardrails around risky areas</div></div></div>
-      </div>
-      <div class="code-block">
-        <div class="code-title">CLAUDE.md</div>
-        <pre><span class="c-h"># Tech stack</span>
-- Node.js 20, TypeScript
-- PostgreSQL + Drizzle ORM
-
-<span class="c-h"># Conventions</span>
-- Use async/await always
-- Errors via /lib/errors
-
-<span class="c-h"># Do not</span>
-<span class="c-do">- Install packages without asking
-- Edit migration files</span></pre>
-      </div>
+    <h2>What is CLAUDE.md?</h2>
+    <div class="subtitle">A persistent system prompt for your project.</div>
+    <div class="check-list">
+      <div class="check-item"><span class="icon">&#10003;</span><div><div class="t">Special project-level instruction file</div><div class="d">Used by Claude Code to guide how it behaves while working on your codebase.</div></div></div>
+      <div class="check-item"><span class="icon">&#10003;</span><div><div class="t">Say it once, not every session</div><div class="d">Project structure, coding conventions, how to run/build/test, what tools to use.</div></div></div>
+      <div class="check-item"><span class="icon">&#10003;</span><div><div class="t">Loaded automatically</div><div class="d">Claude uses it as context every time — no re-prompting required.</div></div></div>
     </div>
   </section>
 
   <!-- SLIDE 5 -->
   <section class="slide">
-    <h2>What to leave out</h2>
-    <div class="subtitle">&nbsp;</div>
-    <div class="split-two">
-      <div class="split-col good">
-        <h4>Keep it here</h4>
-        <ul><li>Specific, testable rules</li><li>"Always do X" project-wide conventions</li><li>Under ~200 lines total</li></ul>
-      </div>
-      <div class="split-col bad">
-        <h4>Move it elsewhere</h4>
-        <ul><li>Multi-step procedures &rarr; use Skills</li><li>Single-component rules &rarr; .claude/rules/</li><li>Secrets, credentials, vague advice</li></ul>
-      </div>
+    <h2>Creating CLAUDE.md</h2>
+    <div class="subtitle">Two ways to get one.</div>
+    <div class="num-grid">
+      <div class="num-card"><span class="n">01</span><div><div class="t">Manually</div><div class="d">Create the CLAUDE.md file yourself and write the sections you already know matter.</div></div></div>
+      <div class="num-card"><span class="n">02</span><div><div class="t">Using /init</div><div class="d">Let Claude scan the repo and generate a first draft for you.</div></div></div>
     </div>
   </section>
 
   <!-- SLIDE 6 -->
   <section class="slide">
-    <h2>Specificity beats volume</h2>
-    <div class="subtitle">&nbsp;</div>
+    <h2>Why /init helps</h2>
+    <div class="subtitle">Situation &rarr; why /init is the faster path.</div>
     <div class="transform-rows">
-      <div class="transform-row"><div class="from">"Format code nicely"</div><div class="arrow">&rarr;</div><div class="to">Vague — Claude has to guess what "nicely" means.</div></div>
-      <div class="transform-row positive"><div class="from">"Use 2-space indentation"</div><div class="arrow">&rarr;</div><div class="to">Specific, testable, followed consistently.</div></div>
-      <div class="transform-row positive"><div class="from">Under 200 lines per file</div><div class="arrow">&rarr;</div><div class="to">Longer files consume more context and reduce adherence.</div></div>
+      <div class="transform-row"><div class="from">Onboarding a codebase you didn't write</div><div class="arrow">&rarr;</div><div class="to">Faster than reading everything yourself.</div></div>
+      <div class="transform-row"><div class="from">Large repos with many files</div><div class="arrow">&rarr;</div><div class="to">Claude can spot patterns you might forget to document.</div></div>
+      <div class="transform-row"><div class="from">You're new to CLAUDE.md</div><div class="arrow">&rarr;</div><div class="to">A good way to see what the format looks like.</div></div>
+      <div class="transform-row"><div class="from">Quick prototypes</div><div class="arrow">&rarr;</div><div class="to">You don't want to invest time writing docs.</div></div>
     </div>
   </section>
 
   <!-- SLIDE 7 -->
   <section class="slide">
-    <h2>Monorepo &amp; nested CLAUDE.md</h2>
-    <div class="subtitle">Claude walks up the tree and concatenates every file it finds.</div>
-    <div class="tree-block">
-      <pre>repo/
-├── <span class="c-file">CLAUDE.md</span>            <span class="c-note"># shared conventions, loads first</span>
-├── apps/web/
-│   └── <span class="c-file">CLAUDE.md</span>        <span class="c-note"># web-app specifics, appended</span>
-└── apps/api/
-    └── <span class="c-file">CLAUDE.md</span>        <span class="c-note"># loads on-demand when Claude reads here</span></pre>
+    <div class="kicker">Demo</div>
+    <h2>Running /init</h2>
+    <div class="subtitle">&nbsp;</div>
+    <div class="code-block">
+      <div class="code-title">terminal</div>
+      <pre><span class="c-h">&gt; /init</span>
+Scanning project files...
+Reading directory structure...
+Inferring tech stack and conventions...
+Writing CLAUDE.md</pre>
     </div>
   </section>
 
   <!-- SLIDE 8 -->
   <section class="slide">
-    <h2>Before &amp; after</h2>
+    <h2>How /init works</h2>
     <div class="subtitle">&nbsp;</div>
-    <div class="transform-rows">
-      <div class="transform-row"><div class="from">No CLAUDE.md</div><div class="arrow">&rarr;</div><div class="to">Every session starts cold. You re-explain the stack each time.</div></div>
-      <div class="transform-row"><div class="from">Vague CLAUDE.md</div><div class="arrow">&rarr;</div><div class="to">Inconsistent adherence — Claude can't act on advice it can't pin down.</div></div>
-      <div class="transform-row positive"><div class="from">Focused, specific CLAUDE.md</div><div class="arrow">&rarr;</div><div class="to">Consistent conventions from message one. Less re-prompting, less drift.</div></div>
+    <div class="num-grid cols-1">
+      <div class="num-card"><span class="n">01</span><div><div class="t">Triggers an internal agent</div><div class="d">It takes over the scanning and writing task.</div></div></div>
+      <div class="num-card"><span class="n">02</span><div><div class="t">Scans high-signal files first</div><div class="d">package.json, requirements.txt, config files, README.md.</div></div></div>
+      <div class="num-card"><span class="n">03</span><div><div class="t">Reads the directory tree</div><div class="d">Builds a picture of the overall structure.</div></div></div>
+      <div class="num-card"><span class="n">04</span><div><div class="t">Infers stack, layout, naming</div><div class="d">Tech stack, folder layout, and naming conventions.</div></div></div>
+      <div class="num-card"><span class="n">05</span><div><div class="t">Writes CLAUDE.md to project root</div><div class="d">With whatever context it inferred.</div></div></div>
     </div>
   </section>
 
   <!-- SLIDE 9 -->
   <section class="slide">
-    <h2>Keep it current</h2>
+    <h2>The generated file is a draft</h2>
     <div class="subtitle">&nbsp;</div>
-    <p class="lead-statement">Treat CLAUDE.md drift like a <span class="hl">code smell</span>. Update it the same moment you'd update a README — after a refactor, a new convention, or onboarding a contributor.</p>
+    <div class="split-two">
+      <div class="split-col good">
+        <h4>~30% useful out of the box</h4>
+        <ul><li>Tech stack</li><li>Folder layout</li><li>Naming conventions it could infer</li></ul>
+      </div>
+      <div class="split-col bad">
+        <h4>~70% you still have to write</h4>
+        <ul><li>Workflows and constraints</li><li>What to avoid</li><li>Deployment targets</li></ul>
+      </div>
+    </div>
   </section>
 
   <!-- SLIDE 10 -->
   <section class="slide">
-    <h2>Key takeaways</h2>
-    <div class="subtitle">&nbsp;</div>
-    <div class="takeaway-list">
-      <div class="takeaway-item pos"><span class="mark">&#10003;</span><p>CLAUDE.md loads automatically every session — no prompt needed.</p></div>
-      <div class="takeaway-item pos"><span class="mark">&#10003;</span><p>Put in stack, conventions, and do-nots. Move procedures to Skills, path-scoped rules to .claude/rules/.</p></div>
-      <div class="takeaway-item pos"><span class="mark">&#10003;</span><p>Specific beats vague. Under 200 lines beats exhaustive.</p></div>
-      <div class="takeaway-item pos"><span class="mark">&#10003;</span><p>Nested files concatenate up the tree — root for shared rules, nested for local ones.</p></div>
+    <h2>Content of CLAUDE.md</h2>
+    <div class="subtitle">Six sections, each answering one question.</div>
+    <div class="spec-grid">
+      <div class="spec-card">
+        <h4>Project Context</h4>
+        <div class="desc">A short description of the project so Claude immediately understands what it's building or modifying.</div>
+        <pre>This is a todo application
+for demo that stores
+projects and their tasks.</pre>
+      </div>
+      <div class="spec-card">
+        <h4>Architecture</h4>
+        <div class="desc">Explains how the codebase is structured and where things belong.</div>
+        <pre>- routes live in routers/
+- business logic lives in
+  services/
+- schemas live in schemas/
+- persistence logic lives
+  in repository/</pre>
+      </div>
+      <div class="spec-card">
+        <h4>Code Style</h4>
+        <div class="desc">Tells Claude how code should look and what conventions to follow.</div>
+        <pre>- Use Python type hints
+  everywhere
+- Prefer Pydantic models for
+  request/response schemas
+- Keep functions small
+  and focused</pre>
+      </div>
+      <div class="spec-card">
+        <h4>Preferred Libraries</h4>
+        <div class="desc">What tools and frameworks should be used.</div>
+        <pre>- Use FastAPI for the API
+- Use Pydantic for validation
+- Use SQLAlchemy for the ORM
+<span class="c-do">- Do not introduce new deps
+  unless necessary</span></pre>
+      </div>
+      <div class="spec-card">
+        <h4>Commands</h4>
+        <div class="desc">Exact commands for running, testing, and maintaining the project.</div>
+        <pre>- Install: npm install
+- Dev server: npm run dev
+- Tests: npm test</pre>
+      </div>
+      <div class="spec-card">
+        <h4>Critical Rules</h4>
+        <div class="desc">Highlights critical warnings, edge cases, and things to avoid.</div>
+        <pre><span class="c-do">- Do not modify database.py
+  unless absolutely necessary
+- Employee IDs are provided
+  by the client — never
+  auto-generate UUIDs</span></pre>
+      </div>
     </div>
   </section>
 
   <!-- SLIDE 11 -->
+  <section class="slide">
+    <h2>Key takeaways</h2>
+    <div class="subtitle">&nbsp;</div>
+    <div class="takeaway-list">
+      <div class="takeaway-item pos"><span class="mark">&#10003;</span><p>Claude Code has no memory across sessions — CLAUDE.md is how you stop repeating yourself.</p></div>
+      <div class="takeaway-item pos"><span class="mark">&#10003;</span><p>It's a persistent system prompt: structure, conventions, commands, tools — written once, loaded every time.</p></div>
+      <div class="takeaway-item pos"><span class="mark">&#10003;</span><p>/init gives you a fast first draft, but only gets you ~30% of the way there.</p></div>
+      <div class="takeaway-item pos"><span class="mark">&#10003;</span><p>The other 70% — workflows, constraints, what to avoid — is on you to write.</p></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 12 -->
   <section class="slide closing">
     <div class="next-video-tag">Next video</div>
     <h2>Slash Commands in Claude Code</h2>
