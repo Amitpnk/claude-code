@@ -261,6 +261,49 @@
       max-width: 780px;
     }
     .lead-statement .hl { color: var(--teal); }
+
+    .figure {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      display: flex;
+      justify-content: center;
+    }
+    .figure img {
+      display: block;
+      max-width: 100%;
+      max-height: 50vh;
+      height: auto;
+      border-radius: 6px;
+    }
+
+    .rule-list { display: flex; flex-direction: column; gap: 10px; }
+    .rule-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+    }
+    .rule-item .bullet {
+      font-family: var(--mono);
+      color: var(--teal);
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .rule-item p { font-size: 14px; color: var(--label); line-height: 1.5; }
+    .rule-item strong { color: var(--white); }
+    .rule-item code {
+      font-family: var(--mono);
+      font-size: 12.5px;
+      color: var(--teal);
+      background: rgba(10,191,188,0.08);
+      border-radius: 4px;
+      padding: 1px 5px;
+    }
     .transform-rows { display: flex; flex-direction: column; gap: 12px; }
     .transform-row {
       display: flex;
@@ -447,6 +490,8 @@
       <div class="num-card"><span class="n">02</span><div><div class="t">What CLAUDE.md actually is</div></div></div>
       <div class="num-card"><span class="n">03</span><div><div class="t">Creating it — manually or with /init</div></div></div>
       <div class="num-card"><span class="n">04</span><div><div class="t">What actually ends up inside</div></div></div>
+      <div class="num-card"><span class="n">05</span><div><div class="t">Where it lives, and how it scales</div></div></div>
+      <div class="num-card"><span class="n">06</span><div><div class="t">Auto memory — Claude's other persistent context</div></div></div>
     </div>
   </section>
 
@@ -601,17 +646,138 @@ projects and their tasks.</pre>
 
   <!-- SLIDE 11 -->
   <section class="slide">
+    <h2>Where CLAUDE.md lives</h2>
+    <div class="subtitle">Project-level vs global — same file format, different scope.</div>
+    <div class="figure">
+      <img src="img/clauemd-type.png" alt="Table comparing project-level CLAUDE.md (in <project-root>/.claude/, scoped to this project only, shared with the team via the repo, used for project-specific commands/workflows/settings) against global CLAUDE.md (in ~/.claude/, applies to every project on the machine, not shared with the team, used for personal commands you want everywhere).">
+    </div>
+  </section>
+
+  <!-- SLIDE 12 -->
+  <section class="slide">
+    <h2>More places it can live</h2>
+    <div class="subtitle">&nbsp;</div>
+    <div class="rule-list">
+      <div class="rule-item"><span class="bullet">&rarr;</span><p><strong>Project root</strong> — <code>./CLAUDE.md</code>. The main file, committed to git.</p></div>
+      <div class="rule-item"><span class="bullet">&rarr;</span><p><strong>Inside .claude/</strong> — <code>./.claude/CLAUDE.md</code>. Same effect, keeps the root tidier.</p></div>
+      <div class="rule-item"><span class="bullet">&rarr;</span><p><strong>Local, personal</strong> — <code>CLAUDE.local.md</code>. Read alongside the main file, gitignored automatically, so your personal tweaks never land in the repo.</p></div>
+      <div class="rule-item"><span class="bullet">&rarr;</span><p><strong>Global</strong> — <code>~/.claude/CLAUDE.md</code>. Personal preferences — coding style, preferred tools, working style — available across every project.</p></div>
+      <div class="rule-item"><span class="bullet">&rarr;</span><p><strong>Subdirectory</strong> — <code>./some/folder/CLAUDE.md</code>. Starting from the current working directory, Claude Code recurses up to <code>/</code>, reading every CLAUDE.md and CLAUDE.local.md it finds — especially useful in large repos.</p></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 13 -->
+  <section class="slide">
+    <h2>Good practices</h2>
+    <div class="subtitle">&nbsp;</div>
+    <div class="rule-list">
+      <div class="rule-item"><span class="bullet">&#10003;</span><p>Start with <strong>/init</strong>, then prune aggressively.</p></div>
+      <div class="rule-item"><span class="bullet">&#10003;</span><p>Commit it to git — it's part of the codebase, not personal config.</p></div>
+      <div class="rule-item"><span class="bullet">&#10003;</span><p>Only put <strong>universally applicable</strong> things in it, not one-off exceptions.</p></div>
+      <div class="rule-item"><span class="bullet">&#10003;</span><p>Use emphasis sparingly for critical rules — if everything is <strong>IMPORTANT</strong>, nothing is.</p></div>
+      <div class="rule-item"><span class="bullet">&#10003;</span><p>Keep it under ~200 lines. As instruction count rises, instruction-following quality drops uniformly.</p></div>
+      <div class="rule-item"><span class="bullet">&#10003;</span><p>The cut test: would removing this line actually cause Claude to make a mistake? If not, cut it.</p></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 14 -->
+  <section class="slide">
+    <h2>Split into .claude/rules/</h2>
+    <div class="subtitle">Move stable, scoped guidance out of CLAUDE.md into topic files, loaded on demand.</div>
+    <div class="figure">
+      <img src="img/good-practice-1.png" alt="Left: a bloated CLAUDE.md with 20-line sections for Code style, Testing, Security, and API conventions all inline. Right: the same content split into .claude/rules/ as separate files — code-style.md, testing.md, security.md, api-conventions.md.">
+    </div>
+  </section>
+
+  <!-- SLIDE 15 -->
+  <section class="slide">
+    <h2>Reference docs with @imports</h2>
+    <div class="subtitle">Point at documentation that already exists instead of duplicating it inline.</div>
+    <div class="figure">
+      <img src="img/good-practice-2.png" alt="CLAUDE.md snippet showing API Conventions pointing to '@docs/api-guidelines.md' and Git Workflow pointing to '@docs/contributing.md', instead of repeating that content in CLAUDE.md itself.">
+    </div>
+  </section>
+
+  <!-- SLIDE 16 -->
+  <section class="slide">
+    <div class="kicker">Important</div>
+    <h2>Three techniques that matter most</h2>
+    <div class="subtitle">This is how CLAUDE.md scales without bloating.</div>
+    <div class="num-grid">
+      <div class="num-card"><span class="n">01</span><div><div class="t">Split into .claude/rules/</div><div class="d">Topic-specific rules, loaded on demand instead of always-on.</div></div></div>
+      <div class="num-card"><span class="n">02</span><div><div class="t">Use @imports</div><div class="d">Reference existing docs instead of duplicating them.</div></div></div>
+      <div class="num-card"><span class="n">03</span><div><div class="t">Subdirectory CLAUDE.md files</div><div class="d">Local context that loads only when Claude is working in that folder.</div></div></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 17 -->
+  <section class="slide">
+    <h2>Treat it as a living document</h2>
+    <div class="subtitle">Build it organically, not upfront.</div>
+    <div class="check-list">
+      <div class="check-item"><span class="icon">&#10003;</span><div><div class="t">Grow it from real friction</div><div class="d">Add sections as issues actually come up, not speculatively upfront.</div></div></div>
+      <div class="check-item"><span class="icon">&#10003;</span><div><div class="t">Correct once, then codify</div><div class="d">The first time you correct Claude on something, write the rule down so you never correct it again.</div></div></div>
+      <div class="check-item"><span class="icon">&#10003;</span><div><div class="t">Audit periodically</div><div class="d">Instructions drift out of date as the project changes — review them like stale code.</div></div></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 18 -->
+  <section class="slide">
+    <h2>Auto memory</h2>
+    <div class="subtitle">A persistent memory Claude builds as it works — separate from CLAUDE.md.</div>
+    <div class="check-list">
+      <div class="check-item"><span class="icon">&#10003;</span><div><div class="t">Learns as it goes</div><div class="d">Discovers something about your project — "this app uses INR, not USD" — and saves it. Next session, it already knows.</div></div></div>
+      <div class="check-item"><span class="icon">&#10003;</span><div><div class="t">Lives per-project</div><div class="d">~/.claude/projects/&lt;project&gt;/memory/MEMORY.md — outside the repo, never committed.</div></div></div>
+      <div class="check-item"><span class="icon">&#10003;</span><div><div class="t">Capped and reviewable</div><div class="d">Only the first 200 lines load automatically each session. Run /memory anytime to see or edit what's saved.</div></div></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 19 -->
+  <section class="slide">
+    <h2>CLAUDE.md vs Memory</h2>
+    <div class="subtitle">Two files, both acting as memory — one you write, one Claude writes.</div>
+    <div class="split-two">
+      <div class="split-col">
+        <h4>CLAUDE.md</h4>
+        <ul><li>Written by you</li><li>Committed to git, shared with the team</li><li>Loaded every session</li><li>Universal rules and conventions</li></ul>
+      </div>
+      <div class="split-col">
+        <h4>MEMORY.md (auto memory)</h4>
+        <ul><li>Written by Claude, automatically</li><li>Lives outside the repo, personal</li><li>First 200 lines load every session</li><li>Project-specific learnings and corrections</li></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 20 -->
+  <section class="slide">
+    <div class="kicker">Demo</div>
+    <h2>You can steer memory directly</h2>
+    <div class="subtitle">Auto memory isn't only automatic — you can tell Claude what to remember.</div>
+    <div class="code-block">
+      <div class="code-title">prompt</div>
+      <pre><span class="c-h">&gt; update your memory files - we use INR and not USD</span>
+Saved to MEMORY.md.
+Next session: Claude already knows.
+
+<span class="c-h">&gt; /memory</span>
+Opens MEMORY.md to review or edit what was saved.</pre>
+    </div>
+  </section>
+
+  <!-- SLIDE 21 -->
+  <section class="slide">
     <h2>Key takeaways</h2>
     <div class="subtitle">&nbsp;</div>
     <div class="takeaway-list">
       <div class="takeaway-item pos"><span class="mark">&#10003;</span><p>Claude Code has no memory across sessions — CLAUDE.md is how you stop repeating yourself.</p></div>
       <div class="takeaway-item pos"><span class="mark">&#10003;</span><p>It's a persistent system prompt: structure, conventions, commands, tools — written once, loaded every time.</p></div>
       <div class="takeaway-item pos"><span class="mark">&#10003;</span><p>/init gives you a fast first draft, but only gets you ~30% of the way there.</p></div>
-      <div class="takeaway-item pos"><span class="mark">&#10003;</span><p>The other 70% — workflows, constraints, what to avoid — is on you to write.</p></div>
+      <div class="takeaway-item pos"><span class="mark">&#10003;</span><p>Keep it short, universal, and git-committed — split rules and @imports handle the rest as it grows.</p></div>
+      <div class="takeaway-item pos"><span class="mark">&#10003;</span><p>Auto memory is the other half — what Claude learns on its own, reviewable anytime with /memory.</p></div>
     </div>
   </section>
 
-  <!-- SLIDE 12 -->
+  <!-- SLIDE 22 -->
   <section class="slide closing">
     <div class="next-video-tag">Next video</div>
     <h2>Slash Commands in Claude Code</h2>
