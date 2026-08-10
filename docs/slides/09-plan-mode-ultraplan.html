@@ -279,6 +279,29 @@
       max-width: 780px;
     }
     .lead-statement .hl { color: var(--teal); }
+    .lead-sub { font-size: 15px; color: var(--label); line-height: 1.6; max-width: 780px; }
+
+    .entry-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+    .entry-card {
+      background: var(--surface);
+      border: 1px solid rgba(10,191,188,0.3);
+      border-radius: var(--radius);
+      padding: 14px 18px;
+    }
+    .entry-card .way { font-family: var(--mono); font-size: 11px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 8px; }
+    .entry-card .d { font-size: 13px; color: var(--label); line-height: 1.45; margin-top: 8px; }
+    kbd {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--teal);
+      background: rgba(10,191,188,0.08);
+      border: 1px solid rgba(10,191,188,0.3);
+      border-radius: 5px;
+      padding: 3px 9px;
+    }
+
+    .code-block .c-you { color: var(--white); }
+    .code-block .c-ok { color: var(--teal); }
     .transform-rows { display: flex; flex-direction: column; gap: 12px; }
     .transform-row {
       display: flex;
@@ -385,7 +408,7 @@
   <a class="back-link" href="../index.html">&larr; Back to series</a>
   <div class="deck-meta">
     <span>Video 9 · Plan Mode &amp; Ultraplan</span>
-    <span class="counter"><span id="slideNum">1</span> / <span id="slideTotal">11</span></span>
+    <span class="counter"><span id="slideNum">1</span> / <span id="slideTotal">12</span></span>
   </div>
 </div>
 
@@ -425,12 +448,39 @@
 
   <!-- SLIDE 4 -->
   <section class="slide">
+    <h2>Demo — entering Plan Mode</h2>
+    <div class="subtitle">Two ways in. Same read-only mode.</div>
+    <div class="entry-row">
+      <div class="entry-card">
+        <div class="way">Slash command</div>
+        <kbd>/plan</kbd>
+        <div class="d">Explicit and unambiguous — type it and you're in.</div>
+      </div>
+      <div class="entry-card">
+        <div class="way">Keyboard</div>
+        <kbd>Shift</kbd> + <kbd>Tab</kbd>
+        <div class="d">Cycles the permission modes. Press until the prompt shows plan mode is on.</div>
+      </div>
+    </div>
+    <div class="code-block">
+      <div class="code-title">TaskFlow &mdash; planning the login and logout feature</div>
+      <pre><span class="c-prompt">&gt;</span> <span class="c-you">/plan</span>
+  <span class="c-ok">&#9208;</span> plan mode on &mdash; read-only, no file edits
+
+<span class="c-prompt">&gt;</span> <span class="c-you">Read .claude/specs/01-login-logout.md and the existing</span>
+  <span class="c-you">app/src/app.ts and app/src/db/schema.ts, then generate</span>
+  <span class="c-you">an implementation plan. Don't write any code.</span></pre>
+    </div>
+  </section>
+
+  <!-- SLIDE 5 -->
+  <section class="slide">
     <h2>Ultraplan Mode</h2>
     <div class="subtitle">&nbsp;</div>
     <p class="lead-statement">Ultraplan is a deeper planning pass for larger or riskier changes — it spawns more thorough exploration before proposing anything. It costs more time upfront, and it's worth every minute of it on anything that touches <span class="hl">multiple systems</span> at once.</p>
   </section>
 
-  <!-- SLIDE 5 -->
+  <!-- SLIDE 6 -->
   <section class="slide">
     <h2>Reading a plan properly</h2>
     <div class="subtitle">Approving a plan is not the same as skimming it.</div>
@@ -441,7 +491,7 @@
     </div>
   </section>
 
-  <!-- SLIDE 6 -->
+  <!-- SLIDE 7 -->
   <section class="slide">
     <h2>When to reach for Plan Mode</h2>
     <div class="subtitle">&nbsp;</div>
@@ -465,7 +515,7 @@
     </div>
   </section>
 
-  <!-- SLIDE 7 -->
+  <!-- SLIDE 8 -->
   <section class="slide">
     <h2>Before &amp; after</h2>
     <div class="subtitle">&nbsp;</div>
@@ -475,7 +525,7 @@
     </div>
   </section>
 
-  <!-- SLIDE 8 -->
+  <!-- SLIDE 9 -->
   <section class="slide">
     <h2>Common mistakes</h2>
     <div class="subtitle">&nbsp;</div>
@@ -491,14 +541,14 @@
     </div>
   </section>
 
-  <!-- SLIDE 9 -->
+  <!-- SLIDE 10 -->
   <section class="slide">
     <h2>Turn the pattern into a habit</h2>
     <div class="subtitle">&nbsp;</div>
     <p class="lead-statement">"Spec, then plan, then build" is a workflow you'll repeat constantly. Once a workflow repeats that often, it belongs encoded as a command you invoke by name — which is exactly where we're headed next.</p>
   </section>
 
-  <!-- SLIDE 10 -->
+  <!-- SLIDE 11 -->
   <section class="slide">
     <h2>Key takeaways</h2>
     <div class="subtitle">&nbsp;</div>
@@ -510,7 +560,7 @@
     </div>
   </section>
 
-  <!-- SLIDE 11 -->
+  <!-- SLIDE 12 -->
   <section class="slide closing">
     <div class="next-video-tag">Next video</div>
     <h2>Custom Slash Commands</h2>
