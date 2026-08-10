@@ -46,7 +46,7 @@
     .top-bar .fill {
       height: 100%;
       background: var(--teal);
-      width: 8.33%;
+      width: 7.69%;
       transition: width 0.35s ease;
     }
 
@@ -299,6 +299,29 @@
     }
     .lead-statement .hl { color: var(--teal); }
 
+    .figure {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      margin-bottom: 16px;
+    }
+    .figure img {
+      max-width: 100%;
+      max-height: 48vh;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+      border-radius: 6px;
+      object-fit: contain;
+    }
+    .fig-note { font-size: 13.5px; color: var(--label); line-height: 1.5; }
+    .fig-note .k { font-family: var(--mono); font-size: 12px; color: var(--teal); margin-right: 8px; }
+
+    .code-block .c-ok { color: var(--teal); }
+    .code-block .c-you { color: var(--white); }
+    .code-block .c-dim { color: #4C5878; }
+
     .takeaway-list { display: flex; flex-direction: column; gap: 14px; }
     .takeaway-item { display: flex; gap: 14px; align-items: flex-start; }
     .takeaway-item .mark {
@@ -391,7 +414,7 @@
   <a class="back-link" href="../index.html">&larr; Back to series</a>
   <div class="deck-meta">
     <span>Video 10 · Custom Slash Commands</span>
-    <span class="counter"><span id="slideNum">1</span> / <span id="slideTotal">11</span></span>
+    <span class="counter"><span id="slideNum">1</span> / <span id="slideTotal">13</span></span>
   </div>
 </div>
 
@@ -411,130 +434,146 @@
     <h2>What we cover today</h2>
     <div class="subtitle">&nbsp;</div>
     <div class="num-grid">
-      <div class="num-card"><span class="n">01</span><div><div class="t">What a custom command actually is</div></div></div>
-      <div class="num-card"><span class="n">02</span><div><div class="t">Anatomy of a good command</div></div></div>
-      <div class="num-card"><span class="n">03</span><div><div class="t">Global vs project commands — when to use each</div></div></div>
-      <div class="num-card"><span class="n">04</span><div><div class="t">Commands worth building first</div></div></div>
+      <div class="num-card"><span class="n">01</span><div><div class="t">What a custom slash command actually is</div></div></div>
+      <div class="num-card"><span class="n">02</span><div><div class="t">Project-scoped vs user-scoped</div></div></div>
+      <div class="num-card"><span class="n">03</span><div><div class="t">Anatomy of a command file</div></div></div>
+      <div class="num-card"><span class="n">04</span><div><div class="t">Live demo — /create-spec, end to end</div></div></div>
     </div>
   </section>
 
   <!-- SLIDE 3 -->
   <section class="slide">
-    <h2>What is a custom command?</h2>
+    <h2>What is a custom slash command?</h2>
     <div class="subtitle">The built-in set from Video 4 — now with your own added in.</div>
     <div class="check-list">
-      <div class="check-item"><span class="icon">&#10003;</span><div><div class="t">A prompt template you invoke by name</div><div class="d">Type /yourcommand and the full instruction runs — nothing retyped.</div></div></div>
-      <div class="check-item"><span class="icon">&#10003;</span><div><div class="t">Lives as a markdown file</div><div class="d">Arguments are optional — a command can take input or run as-is.</div></div></div>
-      <div class="check-item"><span class="icon">&#10003;</span><div><div class="t">The natural next step after Skills</div><div class="d">Skills package knowledge; commands package the exact prompt you keep retyping.</div></div></div>
+      <div class="check-item"><span class="icon">&#10003;</span><div><div class="t">Saved prompts, invoked with <span style="font-family:var(--mono)">/command_name</span></div><div class="d">Type the name, the whole instruction runs — nothing retyped, nothing forgotten.</div></div></div>
+      <div class="check-item"><span class="icon">&#10003;</span><div><div class="t">Any repeatable workflow in your project</div><div class="d">If you do it the same way every time, it can be a command.</div></div></div>
+      <div class="check-item"><span class="icon">&#10003;</span><div><div class="t">Stored as markdown files in the <span style="font-family:var(--mono)">.claude</span> folder</div><div class="d">Plain text, versioned with your code, editable by anyone on the team.</div></div></div>
     </div>
   </section>
 
   <!-- SLIDE 4 -->
   <section class="slide">
-    <h2>Anatomy of a good command</h2>
-    <div class="subtitle">&nbsp;</div>
-    <div class="code-block">
-      <div class="code-title">.claude/commands/review.md</div>
-      <pre><span class="c-h"># Command: review</span>
-<span class="c-prompt"># Short description shown in autocomplete</span>
-Review the current diff for:
-- Logic errors and edge cases
-- Consistency with our error-handling convention
-- Anything that touches auth or payments — flag explicitly
-
-<span class="c-prompt"># $ARGUMENTS optionally passed after the command</span></pre>
+    <h2>Two types</h2>
+    <div class="subtitle">Where the file lives decides who can use it.</div>
+    <div class="compare-two">
+      <div class="compare-col teal-border">
+        <h4>Project-scoped</h4>
+        <div class="sub">.claude/commands/</div>
+        <ul>
+          <li>Available only within that project</li>
+          <li>Committed to git — the whole team gets it</li>
+          <li>For workflows specific to this codebase</li>
+        </ul>
+      </div>
+      <div class="compare-col">
+        <h4>User-scoped</h4>
+        <div class="sub">~/.claude/commands/</div>
+        <ul>
+          <li>Available across all your projects</li>
+          <li>Personal — not shared, not committed</li>
+          <li>For habits you carry everywhere</li>
+        </ul>
+      </div>
     </div>
   </section>
 
   <!-- SLIDE 5 -->
   <section class="slide">
-    <h2>Global vs project commands</h2>
+    <h2>Examples</h2>
     <div class="subtitle">&nbsp;</div>
-    <div class="compare-two">
-      <div class="compare-col teal-border">
-        <h4>Global</h4>
-        <div class="sub">~/.claude/commands</div>
-        <ul>
-          <li>Your personal habits, every project you touch</li>
-          <li>Not shared — just for you</li>
-        </ul>
-      </div>
-      <div class="compare-col">
-        <h4>Project</h4>
-        <div class="sub">.claude/commands, committed to git</div>
-        <ul>
-          <li>Team-shared workflows specific to this repo</li>
-          <li>Everyone gets the same command, same behavior</li>
-        </ul>
-      </div>
+    <div class="num-grid cols-1">
+      <div class="num-card"><span class="n">/</span><div><div class="t">/review</div><div class="d">Runs a code review checklist on the current file.</div></div></div>
+      <div class="num-card"><span class="n">/</span><div><div class="t">/commit</div><div class="d">Generates a git commit message based on staged changes.</div></div></div>
+      <div class="num-card"><span class="n">/</span><div><div class="t">/test</div><div class="d">Runs the test suite and analyses any failures.</div></div></div>
+      <div class="num-card"><span class="n">/</span><div><div class="t">/security-scan</div><div class="d">Scans the codebase for common vulnerabilities — SQL injection, exposed credentials.</div></div></div>
     </div>
   </section>
 
   <!-- SLIDE 6 -->
   <section class="slide">
-    <h2>Commands worth building first</h2>
+    <h2>Anatomy of a command file</h2>
     <div class="subtitle">&nbsp;</div>
-    <div class="num-grid cols-1">
-      <div class="num-card"><span class="n">01</span><div><div class="t">/review</div><div class="d">Your team's actual PR review checklist, encoded as a prompt.</div></div></div>
-      <div class="num-card"><span class="n">02</span><div><div class="t">/debug</div><div class="d">A consistent debugging workflow you follow every time, every project.</div></div></div>
-      <div class="num-card"><span class="n">03</span><div><div class="t">/deploy-check</div><div class="d">Your pre-deploy checklist, run as one command instead of a mental list.</div></div></div>
-      <div class="num-card"><span class="n">04</span><div><div class="t">Whatever you've typed three times this week</div><div class="d">That repetition is the signal — turn it into a command immediately.</div></div></div>
+    <div class="code-block">
+      <div class="code-title">.claude/commands/create-spec.md</div>
+      <pre><span class="c-dim">---</span>
+<span class="c-h">description:</span> Create a spec file and feature branch for the next feature
+<span class="c-h">argument-hint:</span> "Feature name e.g. login and logout"
+<span class="c-h">allowed-tools:</span> Read, Write, Glob, Bash(git:*)
+<span class="c-dim">---</span>
+
+You are a senior developer spinning up a new feature.
+
+User input: <span class="c-h">$ARGUMENTS</span>
+
+<span class="c-prompt">## Step 1 — Check the working directory is clean</span>
+<span class="c-prompt">## Step 2 — Create the feature branch</span>
+<span class="c-prompt">## Step 3 — Research the codebase</span>
+<span class="c-prompt">## Step 4 — Write the spec to .claude/specs/</span></pre>
     </div>
   </section>
 
   <!-- SLIDE 7 -->
   <section class="slide">
-    <h2>Building one</h2>
-    <div class="subtitle">&nbsp;</div>
-    <div class="flow">
-      <div class="flow-step"><div class="t">Notice a repeated prompt</div><div class="d">typed 3+ times</div></div>
-      <div class="flow-arrow">&rarr;</div>
-      <div class="flow-step"><div class="t">Write it as a command</div><div class="d">.md file, clear name</div></div>
-      <div class="flow-arrow">&rarr;</div>
-      <div class="flow-step"><div class="t">Test it</div><div class="d">run it for real</div></div>
-      <div class="flow-arrow">&rarr;</div>
-      <div class="flow-step"><div class="t">Refine the wording</div><div class="d">if output drifts</div></div>
-      <div class="flow-arrow">&rarr;</div>
-      <div class="flow-step"><div class="t">Commit it</div><div class="d">if project-scoped</div></div>
-    </div>
+    <h2>What the command automates</h2>
+    <div class="subtitle">The git ritual around every spec — done identically, every time.</div>
+    <figure class="figure">
+      <img src="img/spec-flow-with-git.png" alt="Git-wrapped spec flow: pull latest, create branch, switch; then Spec, Review, Design, Review, Tasks, Build, Validate; then commit, push, merge PR, delete branch, switch to main">
+    </figure>
+    <div class="fig-note"><span class="k">/create-spec</span>Automates the entire top row plus the Spec box — so the boring part is never skipped or done differently.</div>
   </section>
 
   <!-- SLIDE 8 -->
+  <section class="slide">
+    <h2>Demo — one command, two specs</h2>
+    <div class="subtitle">&nbsp;</div>
+    <div class="code-block">
+      <div class="code-title">TaskFlow — the companion demo app</div>
+      <pre><span class="c-prompt">~/taskflow $</span> <span class="c-you">claude</span>
+
+<span class="c-prompt">&gt;</span> <span class="c-you">/rename "custom slash commands"</span>
+
+<span class="c-prompt">&gt;</span> <span class="c-you">/create-spec login and logout</span>
+  <span class="c-ok">✓</span> working directory clean
+  <span class="c-ok">✓</span> branch    feature/login-logout
+  <span class="c-ok">✓</span> spec      .claude/specs/01-login-logout.md
+
+<span class="c-prompt">&gt;</span> <span class="c-you">/create-spec registration page</span>
+  <span class="c-ok">✓</span> branch    feature/registration-page
+  <span class="c-ok">✓</span> spec      .claude/specs/02-registration-page.md</pre>
+    </div>
+  </section>
+
+  <!-- SLIDE 9 -->
+  <section class="slide">
+    <h2>Then hand the spec to Plan Mode</h2>
+    <div class="subtitle">The command writes the spec. It does not write the code.</div>
+    <div class="code-block">
+      <div class="code-title">Shift+Tab twice — plan mode on</div>
+      <pre><span class="c-prompt">&gt;</span> <span class="c-you">read .claude/specs/01-login-logout.md and</span>
+  <span class="c-you">generate an implementation plan.</span>
+  <span class="c-you">Don't write any code.</span></pre>
+    </div>
+    <p class="fig-note" style="margin-top:16px;">Spec, then plan, then build — the command handles the first step so the discipline survives a busy day.</p>
+  </section>
+
+  <!-- SLIDE 10 -->
   <section class="slide">
     <h2>Common mistakes</h2>
     <div class="subtitle">&nbsp;</div>
     <div class="split-two">
       <div class="split-col good">
         <h4>Do this</h4>
-        <ul><li>Build a command the moment you notice real repetition</li><li>Keep each command scoped to one clear job</li><li>Commit project commands so the whole team benefits</li></ul>
+        <ul><li>Build a command the moment you notice real repetition</li><li>Keep each command scoped to one clear job</li><li>Spell out the steps — a vague command drifts like a vague prompt</li><li>Commit project commands so the whole team benefits</li></ul>
       </div>
       <div class="split-col bad">
         <h4>Not this</h4>
-        <ul><li>Building commands speculatively, before you've repeated anything</li><li>One giant command trying to do five unrelated things</li><li>Leaving a team-useful command sitting only in your global folder</li></ul>
+        <ul><li>Building commands speculatively, before you've repeated anything</li><li>One giant command trying to do five unrelated things</li><li>Letting a command both write the spec and start implementing</li><li>Leaving a team-useful command in your user folder only</li></ul>
       </div>
     </div>
   </section>
 
-  <!-- SLIDE 9 -->
-  <section class="slide">
-    <h2>From single prompts to a knowledge library</h2>
-    <div class="subtitle">&nbsp;</div>
-    <p class="lead-statement">Custom commands package the prompts you already know how to write. The next step is packaging the multi-step workflows behind them — procedures Claude can pull in on demand, reuse across projects, and share with your team. That's <span class="hl">Skills</span>, next video.</p>
-  </section>
-
-  <!-- SLIDE 10 -->
-  <section class="slide">
-    <h2>Key takeaways</h2>
-    <div class="subtitle">&nbsp;</div>
-    <div class="takeaway-list">
-      <div class="takeaway-item pos"><span class="mark">&#10003;</span><p>A custom command packages a prompt you keep retyping into /yourcommand.</p></div>
-      <div class="takeaway-item pos"><span class="mark">&#10003;</span><p>A good command has a clear name, a specific job, and optional arguments.</p></div>
-      <div class="takeaway-item pos"><span class="mark">&#10003;</span><p>Global commands are personal habits; project commands are team-shared, committed to git.</p></div>
-      <div class="takeaway-item pos"><span class="mark">&#10003;</span><p>The signal to build one: you've typed the same prompt three times.</p></div>
-    </div>
-  </section>
-
-  <!-- SLIDE 11 -->
+  <!-- SLIDE 13 -->
   <section class="slide closing">
     <div class="next-video-tag">Next video</div>
     <h2>Claude Code Skills</h2>
