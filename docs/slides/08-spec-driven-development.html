@@ -305,6 +305,58 @@
       max-width: 780px;
     }
     .lead-statement .hl { color: var(--teal); }
+    .lead-sub {
+      font-size: 15px;
+      color: var(--label);
+      line-height: 1.6;
+      max-width: 780px;
+    }
+
+    .compare-table {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      max-height: 100%;
+      overflow-y: auto;
+    }
+    .compare-row {
+      display: grid;
+      grid-template-columns: 190px 1fr 1fr;
+      gap: 14px;
+      align-items: start;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 16px;
+    }
+    .compare-row.head {
+      background: transparent;
+      border: none;
+      padding: 0 16px 2px;
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .compare-row .dim { font-size: 12.5px; font-weight: 600; color: var(--white); line-height: 1.45; }
+    .compare-row .vibe,
+    .compare-row .sdd { font-size: 12.5px; color: var(--label); line-height: 1.45; }
+    .compare-row.head .vibe { color: var(--coral); }
+    .compare-row.head .sdd { color: var(--teal); }
+    .compare-row .sdd { color: #C6D2E8; }
+
+    .figure {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      margin-bottom: 18px;
+    }
+    .figure img { max-width: 100%; height: auto; display: block; margin: 0 auto; border-radius: 6px; }
+    .flow-notes { display: flex; flex-direction: column; gap: 8px; }
+    .flow-note { font-size: 13.5px; color: var(--label); line-height: 1.5; }
+    .flow-note .k { font-family: var(--mono); font-size: 12px; color: var(--teal); margin-right: 8px; }
     .transform-rows { display: flex; flex-direction: column; gap: 12px; }
     .transform-row {
       display: flex;
@@ -396,6 +448,10 @@
       .slide { position: relative; padding: 28px 24px; opacity: 1; transform: none; display: none; }
       .slide.active { display: flex; }
       .split-two, .two-pane, .compare-two, .num-grid { grid-template-columns: 1fr; }
+      .compare-row { grid-template-columns: 1fr; gap: 4px; }
+      .compare-row.head { display: none; }
+      .compare-row .vibe::before { content: 'Vibe coding — '; color: var(--coral); }
+      .compare-row .sdd::before { content: 'Spec-driven — '; color: var(--teal); }
       .flow { flex-direction: column; }
       .flow-arrow { transform: rotate(90deg); justify-content: flex-start; padding-left: 8px; }
       .table-row { grid-template-columns: 1fr; gap: 4px; }
@@ -415,7 +471,7 @@
   <a class="back-link" href="../index.html">&larr; Back to series</a>
   <div class="deck-meta">
     <span>Video 8 · Spec-Driven Development</span>
-    <span class="counter"><span id="slideNum">1</span> / <span id="slideTotal">11</span></span>
+    <span class="counter"><span id="slideNum">1</span> / <span id="slideTotal">12</span></span>
   </div>
 </div>
 
@@ -435,107 +491,85 @@
     <h2>What we cover today</h2>
     <div class="subtitle">&nbsp;</div>
     <div class="num-grid">
-      <div class="num-card"><span class="n">01</span><div><div class="t">Why a spec beats a prompt</div></div></div>
-      <div class="num-card"><span class="n">02</span><div><div class="t">What goes into a good spec</div></div></div>
-      <div class="num-card"><span class="n">03</span><div><div class="t">How to reference it throughout a session</div></div></div>
-      <div class="num-card"><span class="n">04</span><div><div class="t">Why this eliminates drift for good</div></div></div>
+      <div class="num-card"><span class="n">01</span><div><div class="t">What spec-driven development actually is</div></div></div>
+      <div class="num-card"><span class="n">02</span><div><div class="t">Vibe coding vs spec-driven, side by side</div></div></div>
+      <div class="num-card"><span class="n">03</span><div><div class="t">What goes into a spec</div></div></div>
+      <div class="num-card"><span class="n">04</span><div><div class="t">The flow — and why it eliminates drift</div></div></div>
     </div>
   </section>
 
   <!-- SLIDE 3 -->
   <section class="slide">
-    <h2>A spec is where you agree on "done"</h2>
+    <h2>What spec-driven development is</h2>
     <div class="subtitle">&nbsp;</div>
-    <p class="lead-statement">Back in Video 1, we said Claude Code is a brilliant junior developer that needs clear instructions. A spec is exactly that: the moment you and Claude agree on what "done" actually means — <span class="hl">before</span> either of you starts writing code.</p>
+    <p class="lead-statement">A development approach where a detailed <span class="hl">specification document</span> is written before any code is written. The spec acts as the <span class="hl">single source of truth</span> for what the system should do — and all development flows from it.</p>
+    <p class="lead-sub">Back in Video 1, we said Claude Code is a brilliant junior developer that needs clear instructions. The spec is exactly that instruction set — agreed before either of you starts writing code.</p>
   </section>
 
   <!-- SLIDE 4 -->
   <section class="slide">
-    <h2>What goes into a good spec</h2>
-    <div class="subtitle">&nbsp;</div>
-    <div class="num-grid">
-      <div class="num-card"><span class="n">01</span><div><div class="t">The problem</div><div class="d">What's broken or missing, stated in plain terms.</div></div></div>
-      <div class="num-card"><span class="n">02</span><div><div class="t">The scope</div><div class="d">What's in — and just as important, what's explicitly out.</div></div></div>
-      <div class="num-card"><span class="n">03</span><div><div class="t">Acceptance criteria</div><div class="d">How you'll actually know it's done, not just "it works."</div></div></div>
-      <div class="num-card"><span class="n">04</span><div><div class="t">Constraints</div><div class="d">Technical, UX, or business limits the solution has to respect.</div></div></div>
+    <h2>Vibe coding vs spec-driven development</h2>
+    <div class="subtitle">Same tool. Completely different discipline.</div>
+    <div class="compare-table">
+      <div class="compare-row head">
+        <div class="dim">&nbsp;</div><div class="vibe">Vibe coding</div><div class="sdd">Spec-driven development</div>
+      </div>
+      <div class="compare-row"><div class="dim">Starting point</div><div class="vibe">A feeling / rough idea</div><div class="sdd">A written specification</div></div>
+      <div class="compare-row"><div class="dim">Who decides requirements</div><div class="vibe">AI infers them</div><div class="sdd">You define them upfront</div></div>
+      <div class="compare-row"><div class="dim">Control</div><div class="vibe">Low — AI leads</div><div class="sdd">High — you lead</div></div>
+      <div class="compare-row"><div class="dim">Speed to first result</div><div class="vibe">Very fast</div><div class="sdd">Slower upfront, faster overall</div></div>
+      <div class="compare-row"><div class="dim">Code quality</div><div class="vibe">Unpredictable</div><div class="sdd">Consistent and traceable</div></div>
+      <div class="compare-row"><div class="dim">Works well for</div><div class="vibe">Prototypes, exploration, side projects</div><div class="sdd">Production systems, teams, complex apps</div></div>
+      <div class="compare-row"><div class="dim">Failure mode</div><div class="vibe">Spaghetti code you don't fully understand</div><div class="sdd">Over-specified, rigid if requirements change</div></div>
+      <div class="compare-row"><div class="dim">Debugging approach</div><div class="vibe">Ask AI to fix it</div><div class="sdd">Check against spec to find drift</div></div>
+      <div class="compare-row"><div class="dim">Need to understand the code?</div><div class="vibe">Not really</div><div class="sdd">Yes — you own the spec</div></div>
     </div>
   </section>
 
   <!-- SLIDE 5 -->
   <section class="slide">
-    <h2>Where a spec lives</h2>
-    <div class="subtitle">Not in chat history. In your repo.</div>
-    <div class="check-list">
-      <div class="check-item"><span class="icon">&#10003;</span><div><div class="t">A markdown file in the repo</div><div class="d">Not buried in a conversation that scrolls away and disappears.</div></div></div>
-      <div class="check-item"><span class="icon">&#10003;</span><div><div class="t">Referenced by path, not retyped</div><div class="d">Point Claude at the file instead of re-explaining it every session.</div></div></div>
-      <div class="check-item"><span class="icon">&#10003;</span><div><div class="t">Versioned with the code</div><div class="d">It evolves alongside the feature it describes, tracked in git.</div></div></div>
+    <h2>What goes into a spec</h2>
+    <div class="subtitle">&nbsp;</div>
+    <div class="num-grid">
+      <div class="num-card"><span class="n">01</span><div><div class="t">Problem statement</div><div class="d">What's broken or missing, stated in plain terms.</div></div></div>
+      <div class="num-card"><span class="n">02</span><div><div class="t">Functional requirements</div><div class="d">What the system has to do, behaviour by behaviour.</div></div></div>
+      <div class="num-card"><span class="n">03</span><div><div class="t">API contracts</div><div class="d">Inputs, outputs, and the data shapes each call commits to.</div></div></div>
+      <div class="num-card"><span class="n">04</span><div><div class="t">Constraints</div><div class="d">Technical, UX, or business limits the solution has to respect.</div></div></div>
+      <div class="num-card"><span class="n">05</span><div><div class="t">Edge cases &amp; error handling</div><div class="d">What happens on bad input, empty state, and outright failure.</div></div></div>
+      <div class="num-card"><span class="n">06</span><div><div class="t">Acceptance criteria</div><div class="d">How you'll know it's done — testable, not just "it works."</div></div></div>
     </div>
   </section>
 
   <!-- SLIDE 6 -->
   <section class="slide">
-    <h2>Writing a spec with Claude</h2>
-    <div class="subtitle">&nbsp;</div>
-    <div class="flow">
-      <div class="flow-step"><div class="t">Describe the problem</div><div class="d">plain language</div></div>
-      <div class="flow-arrow">&rarr;</div>
-      <div class="flow-step"><div class="t">Claude asks questions</div><div class="d">clarifying scope</div></div>
-      <div class="flow-arrow">&rarr;</div>
-      <div class="flow-step"><div class="t">Draft together</div><div class="d">problem, scope, criteria</div></div>
-      <div class="flow-arrow">&rarr;</div>
-      <div class="flow-step"><div class="t">You approve</div><div class="d">before any code</div></div>
-      <div class="flow-arrow">&rarr;</div>
-      <div class="flow-step"><div class="t">Spec = source of truth</div><div class="d">for the whole build</div></div>
+    <h2>The spec-driven flow</h2>
+    <div class="subtitle">Two review gates — one before design, one after.</div>
+    <figure class="figure">
+      <img src="img/spec-flow.png" alt="Spec-driven development flow: Spec, Review, Design, Review, Tasks, Build, Validate">
+    </figure>
+    <div class="flow-notes">
+      <div class="flow-note"><span class="k">Review 1</span>Catches a wrong spec before you design against it.</div>
+      <div class="flow-note"><span class="k">Review 2</span>Catches a wrong design before it turns into tasks and code.</div>
+      <div class="flow-note"><span class="k">Validate</span>Checks what was built against the spec — not against your memory of it.</div>
     </div>
   </section>
 
-  <!-- SLIDE 7 -->
-  <section class="slide">
-    <h2>Before &amp; after</h2>
-    <div class="subtitle">&nbsp;</div>
-    <div class="transform-rows">
-      <div class="transform-row"><div class="from">"Build me a login flow"</div><div class="arrow">&rarr;</div><div class="to">Vague — Claude has to guess at scope and edge cases.</div></div>
-      <div class="transform-row"><div class="from">A one-paragraph spec</div><div class="arrow">&rarr;</div><div class="to">Some guardrails, but real gaps still remain.</div></div>
-      <div class="transform-row positive"><div class="from">Full spec + acceptance criteria</div><div class="arrow">&rarr;</div><div class="to">Implementation matches intent on the first real pass.</div></div>
-    </div>
-  </section>
+    
 
-  <!-- SLIDE 8 -->
-  <section class="slide">
-    <h2>Common mistakes</h2>
-    <div class="subtitle">&nbsp;</div>
-    <div class="split-two">
-      <div class="split-col good">
-        <h4>Do this</h4>
-        <ul><li>Write acceptance criteria you can actually test against</li><li>State what's explicitly out of scope</li><li>Keep the spec in the repo, referenced by path</li></ul>
-      </div>
-      <div class="split-col bad">
-        <h4>Not this</h4>
-        <ul><li>Treating a one-line prompt as a spec</li><li>Leaving scope implicit and hoping Claude guesses right</li><li>Letting the spec live only in chat history</li></ul>
-      </div>
-    </div>
-  </section>
-
-  <!-- SLIDE 9 -->
-  <section class="slide">
-    <h2>Spec defines what. Plan defines how.</h2>
-    <div class="subtitle">&nbsp;</div>
-    <p class="lead-statement">A spec settles <span class="hl">what</span> "done" means. It doesn't settle <span class="hl">how</span> you'll get there — that's a separate decision, and it's exactly what Plan Mode and Ultraplan Mode are for, coming up next.</p>
-  </section>
-
-  <!-- SLIDE 10 -->
+  <!-- SLIDE 11 -->
   <section class="slide">
     <h2>Key takeaways</h2>
     <div class="subtitle">&nbsp;</div>
     <div class="takeaway-list">
-      <div class="takeaway-item pos"><span class="mark">&#10003;</span><p>A spec is where you and Claude agree on "done" before any code exists.</p></div>
-      <div class="takeaway-item pos"><span class="mark">&#10003;</span><p>Good specs define the problem, the scope, acceptance criteria, and constraints.</p></div>
-      <div class="takeaway-item pos"><span class="mark">&#10003;</span><p>Keep it in the repo as a file, referenced by path — not buried in chat history.</p></div>
-      <div class="takeaway-item pos"><span class="mark">&#10003;</span><p>A clear spec is what eliminates the drift we've been fighting since Video 1.</p></div>
+      <div class="takeaway-item pos"><span class="mark">&#10003;</span><p>A spec is a written document that becomes the single source of truth — every later decision flows from it.</p></div>
+      <div class="takeaway-item pos"><span class="mark">&#10003;</span><p>Cover the problem, functional requirements, API contracts, constraints, edge cases, and acceptance criteria.</p></div>
+      <div class="takeaway-item pos"><span class="mark">&#10003;</span><p>Vibe coding is fast to a first result; spec-driven is slower upfront and faster overall.</p></div>
+      <div class="takeaway-item pos"><span class="mark">&#10003;</span><p>Review twice — after the spec and after the design — then validate the build back against the spec.</p></div>
+      <div class="takeaway-item pos"><span class="mark">&#10003;</span><p>Keep it in the repo, referenced by path, versioned with the code it describes.</p></div>
     </div>
   </section>
 
-  <!-- SLIDE 11 -->
+  <!-- SLIDE 12 -->
   <section class="slide closing">
     <div class="next-video-tag">Next video</div>
     <h2>Plan Mode &amp; Ultraplan Mode</h2>
