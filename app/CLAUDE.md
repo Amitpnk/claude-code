@@ -16,7 +16,7 @@ Stack: Node.js 20, TypeScript, Express + EJS (server-rendered views), PostgreSQL
 All commands run from `app/`.
 
 ```bash
-cp .env.example .env
+cp .env.example .env         # then set SESSION_SECRET to any long random string
 docker compose up -d       # local Postgres on :5432
 npm install
 npm run db:generate        # generate SQL migrations from src/db/schema.ts
@@ -37,8 +37,11 @@ npm run dev                # tsx watch, http://localhost:3000
 Run a single test file: `npx vitest run tests/projects.test.ts`. Run by name: `npx vitest run -t "rejects a project without a name"`.
 
 Tests hit the real Postgres database configured by `DATABASE_URL` (no mocking) — Postgres must be
-running (`docker compose up -d`) before `npm run test`. `tests/projects.test.ts` truncates the
-`projects`/`tasks` tables in `beforeAll`, so tests share and reset that state.
+running (`docker compose up -d`) before `npm run test`, and `SESSION_SECRET` must be set (every test
+file imports `src/app.ts`, which builds the session middleware). Both test files truncate the
+`projects`/`tasks`/`sessions`/`users` tables in `beforeAll`, so tests share and reset that state —
+which is why `vitest.config.ts` sets `fileParallelism: false`. Keep it that way, or a new test file
+will truncate another file's fixtures mid-run.
 
 ## Architecture
 
@@ -54,13 +57,26 @@ adding an operation, decide whether it needs both surfaces or just one, and keep
 single error middleware at the bottom of `src/app.ts` inspects `req.path`: `/api/*` requests get a
 JSON error body, everything else gets the rendered `error.ejs` view.
 
+**Authentication** (`src/routes/auth.routes.ts` + `src/lib/session.ts`): `GET`/`POST /login` and
+`POST /logout` on the HTML surface only. Passwords are bcrypt-hashed through `src/lib/password.ts`
+(one cost factor, defined there); sessions are stored in Postgres via `connect-pg-simple` pointed at
+the Drizzle-owned `sessions` table, so a login survives a dev-server restart. `requireAuth`
+(`src/middleware/require-auth.ts`) guards the four mutating HTML routes and redirects anonymous
+visitors to `/login`; `loadCurrentUser` puts `res.locals.currentUser` in reach of every view, and the
+views hide mutation controls when it is absent. `POST /login` is the one place that deliberately
+re-renders its own form with an inline error instead of delegating to the error middleware, because a
+rejected login is expected user flow — both failure modes return the same generic message so the
+response never discloses which emails are registered. `npm run db:seed` prints the demo credentials.
+**The JSON API under `/api/*` is intentionally unauthenticated** (see `.claude/specs/01-login-logout.md`,
+scope boundary 2) — that is a known gap to close before this app is exposed beyond localhost.
+
 **Schema → migration workflow** (`src/db/schema.ts` + `drizzle-kit`): the schema file is the source
 of truth. After changing it, run `npm run db:generate` to produce a SQL file under
 `src/db/migrations/`, review the generated SQL, then `npm run db:migrate` to apply it. Never
 hand-edit a generated migration file — change the schema and regenerate instead. Migrations are
 excluded from ESLint (`eslint.config.js` ignores `src/db/migrations/**`).
 
-**Data model** (`src/db/schema.ts`): `projects` 1—many `tasks` (cascade delete). `tasks.status` and
+**Data model** (`src/db/schema.ts`): `projects` 1—many `tasks` (cascade delete). `users` and `sessions` stand alone — no project or task is owned by a user yet, and `sessions` exists only so migrations own the table `connect-pg-simple` writes to. `tasks.status` and
 `tasks.priority` are Postgres enums (`taskStatus`, `taskPriority`) with defaults (`todo`,
 `medium`) — follow this pgEnum + `.default(...)` pattern for new fixed-value fields. Tasks are
 conventionally listed ordered by priority (high → low) then creation time; see the

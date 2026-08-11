@@ -15,6 +15,13 @@
       "when": 1783184733423,
       "tag": "0001_wandering_xavin",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1786384661823,
+      "tag": "0002_noisy_titania",
+      "breakpoints": true
     }
   ]
 }

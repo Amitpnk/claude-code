@@ -15,6 +15,14 @@
       <a href="/">Projects</a>
       <a href="/about">About Us</a>
       <a href="/terms">Terms & Conditions</a>
+      <% if (typeof currentUser !== 'undefined' && currentUser) { %>
+        <span class="nav-user"><%= currentUser.email %></span>
+        <form class="logout-form" method="post" action="/logout">
+          <button class="logout-btn" type="submit">Logout</button>
+        </form>
+      <% } else { %>
+        <a href="/login">Login</a>
+      <% } %>
     </nav>
   </header>
   <main class="app-main">
