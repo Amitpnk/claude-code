@@ -46,7 +46,7 @@
     .top-bar .fill {
       height: 100%;
       background: var(--teal);
-      width: 8.33%;
+      width: 4.55%;
       transition: width 0.35s ease;
     }
 
@@ -290,6 +290,48 @@
     .compare-col li { font-size: 13.5px; color: var(--label); display: flex; gap: 8px; line-height: 1.4; }
     .compare-col li::before { content: '—'; color: var(--teal); flex-shrink: 0; }
 
+    code {
+      font-family: var(--mono);
+      font-size: 12.5px;
+      color: var(--teal);
+      background: rgba(10,191,188,0.08);
+      border-radius: 4px;
+      padding: 1px 5px;
+    }
+
+    .figure {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px;
+      display: flex;
+      justify-content: center;
+    }
+    .figure img {
+      display: block;
+      max-width: 100%;
+      max-height: 50vh;
+      height: auto;
+      border-radius: 6px;
+    }
+    .figure-note {
+      font-size: 13px;
+      color: var(--muted);
+      margin-top: 12px;
+      text-align: center;
+    }
+
+    .callout {
+      background: rgba(224,92,92,0.08);
+      border: 1px solid rgba(224,92,92,0.3);
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      margin-top: 18px;
+      font-size: 13.5px;
+      color: var(--label);
+    }
+    .callout strong { color: var(--coral); }
+
     .lead-statement {
       font-size: 19px;
       color: var(--white);
@@ -391,7 +433,7 @@
   <a class="back-link" href="../index.html">&larr; Back to series</a>
   <div class="deck-meta">
     <span>Video 11 · Claude Code Skills</span>
-    <span class="counter"><span id="slideNum">1</span> / <span id="slideTotal">11</span></span>
+    <span class="counter"><span id="slideNum">1</span> / <span id="slideTotal">22</span></span>
   </div>
 </div>
 
@@ -411,25 +453,179 @@
     <h2>What we cover today</h2>
     <div class="subtitle">&nbsp;</div>
     <div class="num-grid">
-      <div class="num-card"><span class="n">01</span><div><div class="t">What Skills actually are</div></div></div>
-      <div class="num-card"><span class="n">02</span><div><div class="t">Skills vs CLAUDE.md — when to reach for each</div></div></div>
-      <div class="num-card"><span class="n">03</span><div><div class="t">Anatomy of a good Skill</div></div></div>
-      <div class="num-card"><span class="n">04</span><div><div class="t">Building a team library that compounds over time</div></div></div>
+      <div class="num-card"><span class="n">01</span><div><div class="t">Why Skills exist — the gap detailed prompts can't close</div></div></div>
+      <div class="num-card"><span class="n">02</span><div><div class="t">What a Skill is, and how it loads on demand</div></div></div>
+      <div class="num-card"><span class="n">03</span><div><div class="t">Personal vs Project scope — and three ways to create one</div></div></div>
+      <div class="num-card"><span class="n">04</span><div><div class="t">Skills vs CLAUDE.md, anatomy, and a library that compounds</div></div></div>
     </div>
   </section>
 
   <!-- SLIDE 3 -->
   <section class="slide">
-    <h2>What are Skills?</h2>
-    <div class="subtitle">A packaged, reusable capability — invoked on demand.</div>
-    <div class="check-list">
-      <div class="check-item"><span class="icon">&#10003;</span><div><div class="t">Invoked, not always-on</div><div class="d">Unlike CLAUDE.md, a Skill isn't loaded every session — Claude reaches for it when it's relevant.</div></div></div>
-      <div class="check-item"><span class="icon">&#10003;</span><div><div class="t">Lives in .claude/skills</div><div class="d">A folder of instructions Claude can invoke by name or by matching intent.</div></div></div>
-      <div class="check-item"><span class="icon">&#10003;</span><div><div class="t">Shareable</div><div class="d">Write it once, use it across every project — or hand it to a teammate.</div></div></div>
-    </div>
+    <div class="kicker">Why Skills</div>
+    <h2>General capability isn't specialist output</h2>
+    <div class="subtitle">&nbsp;</div>
+    <p class="lead-statement">Claude is a <span class="hl">general-purpose model</span>. It reasons, writes, and codes across many domains. But there's a gap between general capability and <span class="hl">reliable, high-quality output for one specific kind of task</span> — and that gap is where Skills live.</p>
   </section>
 
   <!-- SLIDE 4 -->
+  <section class="slide">
+    <div class="kicker">Why Skills</div>
+    <h2>Example: "Generate a PowerPoint"</h2>
+    <div class="subtitle">It knows the domain. It doesn't know your version of it.</div>
+    <div class="split-two">
+      <div class="split-col good">
+        <h4>What Claude knows</h4>
+        <ul>
+          <li>What PowerPoint is</li>
+          <li>How to reason about slide structure</li>
+          <li>Which Python library to use</li>
+        </ul>
+      </div>
+      <div class="split-col bad">
+        <h4>What it doesn't</h4>
+        <ul>
+          <li>How to handle the layout</li>
+          <li>Which fonts to use</li>
+          <li>How and where to place charts and tables</li>
+          <li>Your company's design guidelines</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 5 -->
+  <section class="slide">
+    <div class="kicker">Why Skills</div>
+    <h2>The same gap shows up everywhere</h2>
+    <div class="subtitle">Any task where "correct in general" and "correct here" are different things.</div>
+    <div class="num-grid">
+      <div class="num-card"><span class="n">01</span><div><div class="t">Frontend development</div><div class="d">Knows React. Doesn't know your design system.</div></div></div>
+      <div class="num-card"><span class="n">02</span><div><div class="t">Data analysis</div><div class="d">Knows pandas. Doesn't know which metrics your team trusts.</div></div></div>
+      <div class="num-card"><span class="n">03</span><div><div class="t">Writing documents</div><div class="d">Knows how to write. Doesn't know your house style.</div></div></div>
+      <div class="num-card"><span class="n">04</span><div><div class="t">Code review</div><div class="d">Knows what a bug is. Doesn't know what your team actually blocks on.</div></div></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 6 -->
+  <section class="slide">
+    <div class="kicker">Why Skills</div>
+    <h2>"Just write a detailed prompt"</h2>
+    <div class="subtitle">The obvious fix — and why it stops working.</div>
+    <div class="takeaway-list">
+      <div class="takeaway-item neg"><span class="mark">&#10007;</span><p>You have to remember it and retype it <strong>every single time</strong>.</p></div>
+      <div class="takeaway-item neg"><span class="mark">&#10007;</span><p>Move it to the system prompt and it burns context tokens in every session — even the ones that don't need it.</p></div>
+      <div class="takeaway-item neg"><span class="mark">&#10007;</span><p>You can't bundle resources with a prompt — reference charts, templates, schemas have nowhere to live.</p></div>
+      <div class="takeaway-item neg"><span class="mark">&#10007;</span><p>Sharing, versioning and improving a prompt is awkward — possible with extra tooling, but never native.</p></div>
+      <div class="takeaway-item neg"><span class="mark">&#10007;</span><p>Prompts don't compose. "Read the PDF, extract the table, then build the deck from it" is three prompts you're stitching by hand.</p></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 7 -->
+  <section class="slide">
+    <h2>So — what is a Skill?</h2>
+    <div class="subtitle">&nbsp;</div>
+    <p class="lead-statement">Skills are <span class="hl">reusable, file-based resources</span> that give Claude domain-specific expertise — workflows, context, and best practices that turn a general-purpose agent into a specialist.</p>
+    <div class="check-list">
+      <div class="check-item"><span class="icon">&#10003;</span><div><div class="t">Unlike a prompt, it isn't one-off</div><div class="d">A prompt is an instruction for a single task. A Skill persists and is reused.</div></div></div>
+      <div class="check-item"><span class="icon">&#10003;</span><div><div class="t">It loads on demand</div><div class="d">Say "create a PPT" and only then does Claude find the Skill, read it, and follow it.</div></div></div>
+      <div class="check-item"><span class="icon">&#10003;</span><div><div class="t">No more repeating yourself</div><div class="d">The same guidance stops being re-explained across every new conversation.</div></div></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 8 -->
+  <section class="slide">
+    <h2>A Skill is a folder</h2>
+    <div class="subtitle">One required file, and whatever else the job needs.</div>
+    <div class="figure">
+      <img src="img/skills-folderstructure.png" alt="A folder labelled CLAUDE SKILL containing SKILL.md, a scripts/ directory, a templates/ directory, and resources.">
+    </div>
+    <p class="figure-note">If the Skill needs executable code, it goes in <code>scripts/</code>. Templates, guidelines and reference material go in <code>templates/</code> and <code>resources/</code>.</p>
+  </section>
+
+  <!-- SLIDE 9 -->
+  <section class="slide">
+    <h2>What's inside</h2>
+    <div class="subtitle">SKILL.md is required. Everything else is optional and loaded only when referenced.</div>
+    <div class="figure">
+      <img src="img/skills-contains.png" alt="Diagram of a Skill's contents. SKILL.md is required and holds two parts: YAML frontmatter with a name and a description of when to trigger the skill, and a markdown body with instructions, code patterns, pitfalls, validation steps, and references to scripts. Below it, optional supporting resources: scripts/ for executable code such as validate.py and unpack.py, resources/ for reference docs loaded on demand such as xml-schema.md, and assets/ for templates, fonts, and images used in output files. All three are referenced from SKILL.md — the body tells Claude when to read a resource or run a script, so they are only loaded when needed.">
+    </div>
+  </section>
+
+  <!-- SLIDE 10 -->
+  <section class="slide">
+    <h2>How Skills load</h2>
+    <div class="subtitle">Core idea: don't present information until the moment it's needed.</div>
+    <div class="num-grid cols-1">
+      <div class="num-card"><span class="n">L1</span><div><div class="t">The description — always visible</div><div class="d">A single line in the frontmatter. This is all Claude sees until something matches it.</div></div></div>
+      <div class="num-card"><span class="n">L2</span><div><div class="t">The SKILL.md body — loaded on demand</div><div class="d">Read only once the description matches what you asked for.</div></div></div>
+      <div class="num-card"><span class="n">L3</span><div><div class="t">Referenced resources — loaded if needed</div><div class="d">Scripts, templates and reference docs, pulled in only when the body points at them.</div></div></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 11 -->
+  <section class="slide">
+    <h2>Two scopes</h2>
+    <div class="subtitle">Where you put the folder decides who gets it.</div>
+    <div class="compare-two">
+      <div class="compare-col teal-border">
+        <h4>Personal Skills</h4>
+        <div class="sub">~/.claude/skills</div>
+        <ul>
+          <li>Available across all your projects</li>
+          <li>Just yours — not shared with anyone</li>
+        </ul>
+      </div>
+      <div class="compare-col teal-border">
+        <h4>Project Skills</h4>
+        <div class="sub">.claude/skills</div>
+        <ul>
+          <li>Available in this project only</li>
+          <li>Committed to the repo — shared with your teammates</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 12 -->
+  <section class="slide">
+    <h2>Three ways to create one</h2>
+    <div class="subtitle">&nbsp;</div>
+    <div class="num-grid cols-1">
+      <div class="num-card"><span class="n">01</span><div><div class="t">By hand</div><div class="d">Create the folder and write SKILL.md yourself. Not where beginners should start.</div></div></div>
+      <div class="num-card"><span class="n">02</span><div><div class="t">Let Claude do it — the skill-creator Skill</div><div class="d">Creates new Skills, improves existing ones, and tests how reliably they trigger.</div></div></div>
+      <div class="num-card"><span class="n">03</span><div><div class="t">Install from the community</div><div class="d">Sites like skillsmp.com. Convenient, but read before you install.</div></div></div>
+    </div>
+    <div class="callout"><strong>Vet anything you install.</strong> A Skill is instructions Claude will follow and scripts it may run. <a href="https://github.com/anthropics/skills">github.com/anthropics/skills</a> is the safe, official source.</div>
+  </section>
+
+  <!-- SLIDE 13 -->
+  <section class="slide">
+    <h2>skill-creator</h2>
+    <div class="subtitle">Type <code>/</code> for skills — or reach for it from the Skills menu.</div>
+    <div class="figure">
+      <img src="img/skill-createor.png" alt="The Claude prompt box with the plus menu open. Under a Skills submenu, skill-creator is highlighted alongside Manage skills and Browse skills. Its tooltip reads: create new skills, modify and improve existing skills, and measure skill performance — use when users want to create a skill from scratch, edit or optimize an existing one, run evals to test a skill, benchmark skill performance with variance analysis, or optimize a skill's description for better triggering accuracy.">
+    </div>
+  </section>
+
+  <!-- SLIDE 14 -->
+  <section class="slide">
+    <h2>Steps to create a Skill</h2>
+    <div class="subtitle">&nbsp;</div>
+    <div class="flow">
+      <div class="flow-step"><div class="t">Identify the need</div><div class="d">a repeated task</div></div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step"><div class="t">Write SKILL.md</div><div class="d">folder + frontmatter</div></div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step"><div class="t">Add supporting files</div><div class="d">if needed</div></div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step"><div class="t">Test it</div><div class="d">does it trigger?</div></div>
+      <div class="flow-arrow">&rarr;</div>
+      <div class="flow-step"><div class="t">Iterate and refine</div><div class="d">refactor</div></div>
+    </div>
+  </section>
+
+  <!-- SLIDE 15 -->
   <section class="slide">
     <h2>Skills vs CLAUDE.md</h2>
     <div class="subtitle">Two different jobs — don't force one to do the other's work.</div>
@@ -453,7 +649,7 @@
     </div>
   </section>
 
-  <!-- SLIDE 5 -->
+  <!-- SLIDE 16 -->
   <section class="slide">
     <h2>When to reach for a Skill</h2>
     <div class="subtitle">&nbsp;</div>
@@ -465,7 +661,7 @@
     </div>
   </section>
 
-  <!-- SLIDE 6 -->
+  <!-- SLIDE 17 -->
   <section class="slide">
     <h2>Anatomy of a good Skill</h2>
     <div class="subtitle">&nbsp;</div>
@@ -476,24 +672,19 @@
     </div>
   </section>
 
-  <!-- SLIDE 7 -->
+  <!-- SLIDE 18 -->
   <section class="slide">
-    <h2>Building the library</h2>
-    <div class="subtitle">&nbsp;</div>
-    <div class="flow">
-      <div class="flow-step"><div class="t">Notice a pattern</div><div class="d">repeated workflow</div></div>
-      <div class="flow-arrow">&rarr;</div>
-      <div class="flow-step"><div class="t">Write it as a Skill</div><div class="d">clear trigger + steps</div></div>
-      <div class="flow-arrow">&rarr;</div>
-      <div class="flow-step"><div class="t">Test it</div><div class="d">does Claude reach for it?</div></div>
-      <div class="flow-arrow">&rarr;</div>
-      <div class="flow-step"><div class="t">Refine the trigger</div><div class="d">if it's missed or misfired</div></div>
-      <div class="flow-arrow">&rarr;</div>
-      <div class="flow-step"><div class="t">Share it</div><div class="d">with the team</div></div>
+    <h2>From one Skill to a library</h2>
+    <div class="subtitle">The steps make one Skill. These turn a folder of them into an asset.</div>
+    <div class="check-list">
+      <div class="check-item"><span class="icon">&#10003;</span><div><div class="t">Let the pattern tell you</div><div class="d">If you've explained the same procedure three times, that's the signal — don't plan the library up front.</div></div></div>
+      <div class="check-item"><span class="icon">&#10003;</span><div><div class="t">Promote it from personal to project</div><div class="d">Prove it in <code>~/.claude/skills</code> first, then move it to <code>.claude/skills</code> and commit it once it's earned its place.</div></div></div>
+      <div class="check-item"><span class="icon">&#10003;</span><div><div class="t">Watch the triggers, not just the steps</div><div class="d">A Skill nobody's Claude reaches for is dead weight. Misfires and misses are description problems.</div></div></div>
+      <div class="check-item"><span class="icon">&#10003;</span><div><div class="t">Update it when the workflow changes</div><div class="d">A stale Skill is worse than none — it teaches the old way with full confidence.</div></div></div>
     </div>
   </section>
 
-  <!-- SLIDE 8 -->
+  <!-- SLIDE 19 -->
   <section class="slide">
     <h2>Common mistakes</h2>
     <div class="subtitle">&nbsp;</div>
@@ -509,14 +700,14 @@
     </div>
   </section>
 
-  <!-- SLIDE 9 -->
+  <!-- SLIDE 20 -->
   <section class="slide">
     <h2>Knowledge that compounds</h2>
     <div class="subtitle">&nbsp;</div>
     <p class="lead-statement">Every Skill you write is <span class="hl">reusable capital</span> — it pays off in every future project, and every teammate who reaches for it. Next video pairs this with SubAgents, so that reusable capability can run in its own isolated context too.</p>
   </section>
 
-  <!-- SLIDE 10 -->
+  <!-- SLIDE 21 -->
   <section class="slide">
     <h2>Key takeaways</h2>
     <div class="subtitle">&nbsp;</div>
@@ -528,7 +719,7 @@
     </div>
   </section>
 
-  <!-- SLIDE 11 -->
+  <!-- SLIDE 22 -->
   <section class="slide closing">
     <div class="next-video-tag">Next video</div>
     <h2>SubAgents</h2>
