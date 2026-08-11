@@ -12,6 +12,7 @@ point of the layout, so it's worth knowing which is which.
 | `skills/` | on match | Claude picks a skill when the request matches its `description`, or you name it. |
 | `rules/` | on demand | **Not** auto-loaded. Read only when something points at it — see below. |
 | `specs/` | on demand | Project content, not config. Written by `/create-spec`, read when implementing. |
+| `plans/` | on demand | Written by Plan Mode because `settings.json` points it here. Read when implementing. |
 
 Note the root [`CLAUDE.md`](../CLAUDE.md) and [`app/CLAUDE.md`](../app/CLAUDE.md) are the
 only files loaded into *every* session automatically. Everything here is either explicitly
@@ -22,6 +23,9 @@ invoked or explicitly referenced.
 Permissions shared by everyone working in this repo: an allowlist of read-only commands
 that shouldn't need a prompt (`npm run lint`, `git diff`, …) and a denylist for `.env`
 files so secrets are never read into context. `.env.example` stays readable on purpose.
+
+It also sets `"plansDirectory": ".claude/plans"` so Plan Mode writes into this repo instead
+of the global default — see [`plans/`](#plans) below.
 
 Personal overrides go in `settings.local.json`, which is gitignored. Later sources win:
 `~/.claude/settings.json` → `.claude/settings.json` → `.claude/settings.local.json`.
@@ -63,3 +67,20 @@ app works belongs in `app/CLAUDE.md`, which is always loaded.
 Feature specs, numbered and kebab-cased (`01-login-logout.md`). Output of `/create-spec`,
 input to Plan Mode. These are project artifacts rather than configuration — Claude Code
 has no built-in meaning for this folder.
+
+## `plans/`
+
+Implementation plans, named to match the spec they come from (`01-login-logout.md` here
+mirrors `specs/01-login-logout.md`). A spec says *what* and *why*; the plan says *how* and
+*in what order*.
+
+Unlike `specs/`, this folder **is** known to Claude Code — but only because
+`settings.json` sets `plansDirectory` to it. Without that key, approving a plan writes to
+`~/.claude/plans/` instead, outside the repo. Asking for a path in your prompt does not
+change this: the harness writes the plan artifact itself and reads only the setting.
+
+Plans are committed, like specs. Episodes 08 and 09 point viewers at
+`.claude/plans/01-login-logout.md`, so it has to exist here.
+
+Changing `plansDirectory` takes effect on the next session — or after opening `/hooks`
+once, which reloads config.
