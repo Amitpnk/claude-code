@@ -46,6 +46,32 @@ trigger phrases, not just the topic.
 
 - [`add-task-field/`](skills/add-task-field/SKILL.md) — the correct order for adding a
   column to `tasks`/`projects`: schema → migration → API → view → seed → test → verify.
+- [`audit-routes/`](skills/audit-routes/SKILL.md) — check the HTML and `/api/*` surfaces in
+  `app/` for drift: validation on one surface but not the other, inline error responses,
+  unguarded id parsing, duplicated helpers.
+
+The two make a matched pair worth demoing together — `add-task-field` builds, `audit-routes`
+checks what was built. Neither knows about the other; Claude picks whichever the request
+matches.
+
+A skill can be a single `SKILL.md`, or a folder with supporting files beside it.
+`audit-routes/` is the full shape, and each part loads at a different moment:
+
+```
+audit-routes/
+├── SKILL.md                  the workflow — read when the skill triggers
+├── scripts/
+│   └── audit_routes.py       runs; never read into context
+├── templates/
+│   └── audit-report.md       the report format
+└── resources/
+    └── route-contract.md     fix recipes — read only when actually fixing
+```
+
+That is progressive disclosure: the `description` is always in context, `SKILL.md` only when
+a request matches it, `route-contract.md` only if a fix is actually being written. The
+script is cheaper still — running it costs no context at all, which is why the detection
+logic lives in Python rather than as prose Claude has to apply by hand.
 
 ## `rules/`
 
