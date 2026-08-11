@@ -3,9 +3,13 @@ import path from "path";
 import { and, eq, sql } from "drizzle-orm";
 import { db } from "./db/client";
 import { projects, tasks } from "./db/schema";
+import { authRouter } from "./routes/auth.routes";
 import { projectsRouter } from "./routes/projects.routes";
 import { AppError } from "./lib/errors";
+import { createSessionMiddleware } from "./lib/session";
 import { parsePriority } from "./lib/task-priority";
+import { loadCurrentUser } from "./middleware/load-current-user";
+import { requireAuth } from "./middleware/require-auth";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const byPriorityThenCreatedAt = (t: any, { asc }: any) => [
@@ -21,6 +25,13 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+// Sessions come after the body parsers and before every router, so all downstream
+// handlers see req.session. express.static stays above this, so asset requests
+// never touch the session store.
+app.use(createSessionMiddleware());
+app.use(loadCurrentUser);
+
+app.use(authRouter);
 app.use(projectsRouter);
 
 app.get("/about", (_req, res) => {
@@ -47,7 +58,7 @@ app.get("/", async (_req, res, next) => {
   }
 });
 
-app.post("/projects", async (req, res, next) => {
+app.post("/projects", requireAuth, async (req, res, next) => {
   try {
     const { name, description } = req.body;
     await db.insert(projects).values({ name, description });
@@ -74,7 +85,7 @@ app.get("/projects/:id", async (req, res, next) => {
   }
 });
 
-app.post("/projects/:id/delete", async (req, res, next) => {
+app.post("/projects/:id/delete", requireAuth, async (req, res, next) => {
   try {
     const id = Number(req.params.id);
     await db.delete(projects).where(eq(projects.id, id));
@@ -84,7 +95,7 @@ app.post("/projects/:id/delete", async (req, res, next) => {
   }
 });
 
-app.post("/projects/:id/tasks", async (req, res, next) => {
+app.post("/projects/:id/tasks", requireAuth, async (req, res, next) => {
   try {
     const projectId = Number(req.params.id);
     const { title } = req.body;
@@ -96,7 +107,7 @@ app.post("/projects/:id/tasks", async (req, res, next) => {
   }
 });
 
-app.post("/projects/:projectId/tasks/:id/delete", async (req, res, next) => {
+app.post("/projects/:projectId/tasks/:id/delete", requireAuth, async (req, res, next) => {
   try {
     const projectId = Number(req.params.projectId);
     const id = Number(req.params.id);

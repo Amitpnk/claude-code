@@ -2,11 +2,13 @@
 
 <h1>Projects</h1>
 
-<form class="new-project-form" method="post" action="/projects">
-  <input type="text" name="name" placeholder="Project name" required>
-  <input type="text" name="description" placeholder="Description (optional)">
-  <button type="submit">New project</button>
-</form>
+<% if (typeof currentUser !== 'undefined' && currentUser) { %>
+  <form class="new-project-form" method="post" action="/projects">
+    <input type="text" name="name" placeholder="Project name" required>
+    <input type="text" name="description" placeholder="Description (optional)">
+    <button type="submit">New project</button>
+  </form>
+<% } %>
 
 <div class="project-grid">
   <% projects.forEach(function(project) { %>

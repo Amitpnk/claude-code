@@ -4,10 +4,12 @@ import request from "supertest";
 import { sql } from "drizzle-orm";
 import { app } from "../src/app";
 import { db, pool } from "../src/db/client";
-import { projects, tasks } from "../src/db/schema";
+import { projects, sessions, tasks, users } from "../src/db/schema";
 
 beforeAll(async () => {
-  await db.execute(sql`TRUNCATE TABLE ${tasks}, ${projects} RESTART IDENTITY CASCADE`);
+  await db.execute(
+    sql`TRUNCATE TABLE ${tasks}, ${projects}, ${sessions}, ${users} RESTART IDENTITY CASCADE`,
+  );
 });
 
 afterAll(async () => {
