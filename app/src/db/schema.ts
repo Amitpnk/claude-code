@@ -1,5 +1,14 @@
 import { relations } from "drizzle-orm";
-import { pgEnum, pgTable, serial, text, timestamp, integer } from "drizzle-orm/pg-core";
+import {
+  index,
+  integer,
+  json,
+  pgEnum,
+  pgTable,
+  serial,
+  text,
+  timestamp,
+} from "drizzle-orm/pg-core";
 
 export const taskStatus = pgEnum("task_status", ["todo", "in_progress", "done"]);
 export const taskPriority = pgEnum("task_priority", ["low", "medium", "high"]);
@@ -32,3 +41,23 @@ export const tasksRelations = relations(tasks, ({ one }) => ({
     references: [projects.id],
   }),
 }));
+
+export const users = pgTable("users", {
+  id: serial("id").primaryKey(),
+  email: text("email").notNull().unique(),
+  passwordHash: text("password_hash").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+// Owned here so migrations manage it, with the exact column shape connect-pg-simple expects.
+export const sessions = pgTable(
+  "sessions",
+  {
+    sid: text("sid").primaryKey(),
+    sess: json("sess").notNull(),
+    expire: timestamp("expire", { precision: 6 }).notNull(),
+  },
+  (table) => ({
+    expireIdx: index("sessions_expire_idx").on(table.expire),
+  }),
+);

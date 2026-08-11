@@ -19,3 +19,9 @@ export class ValidationError extends AppError {
     super(message, 400);
   }
 }
+
+export class AuthError extends AppError {
+  constructor(message = "Invalid email or password") {
+    super(message, 401);
+  }
+}
