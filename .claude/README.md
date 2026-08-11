@@ -49,13 +49,16 @@ trigger phrases, not just the topic.
 - [`audit-routes/`](skills/audit-routes/SKILL.md) — check the HTML and `/api/*` surfaces in
   `app/` for drift: validation on one surface but not the other, inline error responses,
   unguarded id parsing, duplicated helpers.
+- [`new-episode-deck/`](skills/new-episode-deck/SKILL.md) — build or check a slide deck in
+  `docs/slides/`. Scaffolds from the house template, then validates numbering, tag balance
+  and image refs.
 
-The two make a matched pair worth demoing together — `add-task-field` builds, `audit-routes`
-checks what was built. Neither knows about the other; Claude picks whichever the request
-matches.
+`add-task-field` and `audit-routes` make a matched pair worth demoing together — one builds,
+the other checks what was built. Neither knows about the other; Claude picks whichever the
+request matches.
 
-A skill can be a single `SKILL.md`, or a folder with supporting files beside it.
-`audit-routes/` is the full shape, and each part loads at a different moment:
+A skill can be a single `SKILL.md`, or a folder with supporting files beside it. The last
+two are the full shape, and each part loads at a different moment:
 
 ```
 audit-routes/
@@ -68,10 +71,13 @@ audit-routes/
     └── route-contract.md     fix recipes — read only when actually fixing
 ```
 
-That is progressive disclosure: the `description` is always in context, `SKILL.md` only when
-a request matches it, `route-contract.md` only if a fix is actually being written. The
-script is cheaper still — running it costs no context at all, which is why the detection
-logic lives in Python rather than as prose Claude has to apply by hand.
+That is progressive disclosure: the `description` above is always in context, `SKILL.md` is
+read only when a request matches it, and `route-contract.md` only if a fix is actually being
+written. A script is cheaper still — running it costs no context at all, which is why the
+detection logic lives in Python rather than as prose Claude has to apply by hand.
+`new-episode-deck/` follows the same layout, with two scripts (`new_deck.py`,
+`verify_deck.py`), the deck skeleton in `templates/`, and the CSS component catalog in
+`resources/`.
 
 ## `rules/`
 

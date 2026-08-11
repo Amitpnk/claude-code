@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{TITLE}} — Video {{NUM}} · Learn Claude Code the Right Way</title>
+  <meta name="description" content="Slide deck for Video {{NUM}}: {{TITLE}} — {{SUBTITLE}}.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0E1117;
+      --surface:   #161C2D;
+      --surface2:  #1E2740;
+      --teal:      #0ABFBC;
+      --teal-dim:  #087f7d;
+      --coral:     #E05C5C;
+      --white:     #F0F4FF;
+      --muted:     #6B7A9F;
+      --label:     #A0AABF;
+      --border:    #252E45;
+      --mono:      'JetBrains Mono', monospace;
+      --sans:      'Inter', sans-serif;
+      --radius:    10px;
+    }
+
+    html, body { height: 100%; }
+
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+    }
+
+    a { color: var(--teal); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .top-bar { height: 3px; background: var(--border); position: relative; }
+    .top-bar .fill {
+      height: 100%;
+      background: var(--teal);
+      width: {{FILL}}%;
+      transition: width 0.35s ease;
+    }
+
+    .deck-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+    .back-link {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--label);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .back-link:hover { color: var(--teal); }
+    .deck-meta {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .deck-meta .counter { color: var(--teal); }
+
+    .stage {
+      position: relative;
+      height: calc(100vh - 3px - 53px - 64px);
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 40px 72px;
+      opacity: 0;
+      transform: translateX(24px);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+      pointer-events: none;
+      max-width: 1100px;
+      margin: 0 auto;
+      width: 100%;
+    }
+    .slide.active {
+      opacity: 1;
+      transform: translateX(0);
+      pointer-events: auto;
+    }
+
+    .kicker {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--teal);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .slide h2 {
+      font-size: clamp(22px, 3.2vw, 34px);
+      font-weight: 600;
+      letter-spacing: -0.01em;
+      margin-bottom: 8px;
+      color: var(--white);
+    }
+    .subtitle {
+      font-size: 16px;
+      color: var(--label);
+      margin-bottom: 28px;
+    }
+
+    .slide.title-slide { align-items: center; text-align: center; }
+    .slide.title-slide .kicker { margin-bottom: 28px; }
+    .slide.title-slide h1 {
+      font-size: clamp(34px, 6vw, 58px);
+      font-weight: 700;
+      line-height: 1.12;
+      letter-spacing: -0.02em;
+      margin-bottom: 14px;
+    }
+    .slide.title-slide h1 em { font-style: normal; color: var(--teal); }
+    .slide.title-slide .tagline {
+      font-size: 19px;
+      color: var(--label);
+      margin-bottom: 40px;
+    }
+    .series-label {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--teal);
+      background: rgba(10,191,188,0.08);
+      border: 1px solid rgba(10,191,188,0.25);
+      border-radius: 4px;
+      padding: 4px 12px;
+      letter-spacing: 0.06em;
+    }
+
+    .num-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+    .num-grid.cols-1 { grid-template-columns: 1fr; }
+    .num-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 22px;
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+    }
+    .num-card .n {
+      font-family: var(--mono);
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--teal);
+      flex-shrink: 0;
+      min-width: 30px;
+    }
+    .num-card .t { font-size: 15px; font-weight: 600; color: var(--white); margin-bottom: 4px; }
+    .num-card .d { font-size: 13.5px; color: var(--label); line-height: 1.55; }
+
+    .split-two {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .split-col {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+    }
+    .split-col.good { border-color: rgba(10,191,188,0.3); }
+    .split-col.bad { border-color: rgba(224,92,92,0.3); }
+    .split-col h4 {
+      font-family: var(--mono);
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+    .split-col.good h4 { color: var(--teal); }
+    .split-col.bad h4 { color: var(--coral); }
+    .split-col ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .split-col li { font-size: 14px; color: var(--label); display: flex; gap: 8px; }
+    .split-col.good li::before { content: '✓'; color: var(--teal); }
+    .split-col.bad li::before { content: '✗'; color: var(--coral); }
+
+    .flow {
+      display: flex;
+      align-items: stretch;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .flow-step {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      min-width: 120px;
+      flex: 1;
+    }
+    .flow-step .t { font-size: 13.5px; font-weight: 600; color: var(--white); }
+    .flow-step .d { font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 4px; }
+    .flow-arrow { display: flex; align-items: center; color: var(--muted); font-size: 16px; }
+
+    .two-pane {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      align-items: center;
+    }
+    .check-list { display: flex; flex-direction: column; gap: 18px; }
+    .check-item { display: flex; gap: 12px; }
+    .check-item .icon {
+      color: var(--teal);
+      font-family: var(--mono);
+      flex-shrink: 0;
+      width: 20px;
+      height: 20px;
+      border: 1px solid rgba(10,191,188,0.35);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      margin-top: 2px;
+    }
+    .check-item .t { font-size: 14.5px; font-weight: 600; color: var(--white); margin-bottom: 3px; }
+    .check-item .d { font-size: 13px; color: var(--label); line-height: 1.5; }
+
+    .code-block {
+      background: #0D1117;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .code-block .code-title {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+      padding: 8px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .code-block pre {
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.8;
+      padding: 14px 16px;
+      color: var(--label);
+      overflow-x: auto;
+    }
+    .code-block .c-h { color: var(--teal); }
+    .code-block .c-prompt { color: var(--muted); }
+
+    .compare-two {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+    .compare-col {
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+    }
+    .compare-col.teal-border { border-color: rgba(10,191,188,0.3); }
+    .compare-col h4 { font-family: var(--mono); font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 6px; color: var(--teal); }
+    .compare-col .sub { font-size: 12.5px; color: var(--muted); margin-bottom: 14px; }
+    .compare-col ul { list-style: none; display: flex; flex-direction: column; gap: 9px; }
+    .compare-col li { font-size: 13.5px; color: var(--label); display: flex; gap: 8px; line-height: 1.4; }
+    .compare-col li::before { content: '—'; color: var(--teal); flex-shrink: 0; }
+
+    .lead-statement {
+      font-size: 19px;
+      color: var(--white);
+      line-height: 1.55;
+      margin-bottom: 28px;
+      max-width: 780px;
+    }
+    .lead-statement .hl { color: var(--teal); }
+
+    .figure {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      margin-bottom: 16px;
+    }
+    .figure img {
+      max-width: 100%;
+      max-height: 48vh;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+      border-radius: 6px;
+      object-fit: contain;
+    }
+    .fig-note { font-size: 13.5px; color: var(--label); line-height: 1.5; }
+    .fig-note .k { font-family: var(--mono); font-size: 12px; color: var(--teal); margin-right: 8px; }
+
+    .code-block .c-ok { color: var(--teal); }
+    .code-block .c-you { color: var(--white); }
+    .code-block .c-dim { color: #4C5878; }
+
+    .takeaway-list { display: flex; flex-direction: column; gap: 14px; }
+    .takeaway-item { display: flex; gap: 14px; align-items: flex-start; }
+    .takeaway-item .mark {
+      font-family: var(--mono);
+      font-size: 13px;
+      width: 22px; height: 22px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .takeaway-item.neg .mark { background: rgba(224,92,92,0.15); color: var(--coral); }
+    .takeaway-item.pos .mark { background: rgba(10,191,188,0.15); color: var(--teal); }
+    .takeaway-item p { font-size: 14.5px; color: var(--label); line-height: 1.55; }
+
+    .slide.closing { text-align: center; align-items: center; }
+    .closing .next-video-tag { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-bottom: 10px; letter-spacing: 0.06em; text-transform: uppercase; }
+    .closing h2 { margin-bottom: 10px; }
+    .closing .tagline { color: var(--label); font-size: 15.5px; margin-bottom: 32px; }
+    .cta-row { display: flex; gap: 16px; justify-content: center; margin-bottom: 32px; flex-wrap: wrap; }
+    .cta-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 26px;
+      min-width: 180px;
+    }
+    .cta-card .t { font-size: 14px; font-weight: 600; color: var(--teal); margin-bottom: 4px; }
+    .cta-card .d { font-size: 12.5px; color: var(--muted); }
+    .closing .footer-tag { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+
+    .deck-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 24px;
+      border-top: 1px solid var(--border);
+      height: 64px;
+    }
+    .nav-btn {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--label);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 8px 16px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .nav-btn:hover:not(:disabled) { border-color: var(--teal-dim); color: var(--teal); }
+    .nav-btn:disabled { opacity: 0.35; cursor: default; }
+
+    .dots { display: flex; gap: 7px; }
+    .dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--border);
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+      border: none;
+      padding: 0;
+    }
+    .dot.active { background: var(--teal); transform: scale(1.3); }
+    .dot:hover { background: var(--teal-dim); }
+
+    @media (max-width: 760px) {
+      body { overflow: auto; }
+      .stage { height: auto; min-height: calc(100vh - 3px - 53px - 64px); }
+      .slide { position: relative; padding: 28px 24px; opacity: 1; transform: none; display: none; }
+      .slide.active { display: flex; }
+      .split-two, .two-pane, .compare-two, .num-grid { grid-template-columns: 1fr; }
+      .flow { flex-direction: column; }
+      .flow-arrow { transform: rotate(90deg); justify-content: flex-start; padding-left: 8px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .slide { transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="top-bar"><div class="fill" id="progressFill"></div></div>
+
+<div class="deck-header">
+  <a class="back-link" href="../index.html">&larr; Back to series</a>
+  <div class="deck-meta">
+    <span>Video {{NUM}} &middot; {{TITLE}}</span>
+    <span class="counter"><span id="slideNum">1</span> / <span id="slideTotal">{{TOTAL}}</span></span>
+  </div>
+</div>
+
+<div class="stage" id="stage">
+
+  <!-- SLIDE 1 -->
+  <section class="slide title-slide active">
+    <div class="kicker">Learn Claude Code the Right Way &nbsp;&middot;&nbsp; Video {{NUM}} of 15</div>
+    <h1>{{TITLE}}<br><em>{{SUBTITLE}}</em></h1>
+    <p class="tagline">{{TAGLINE}}</p>
+    <span class="series-label">Claude Code Mastery Series</span>
+  </section>
+
+  <!-- SLIDE 2 -->
+  <section class="slide">
+    <div class="kicker">Agenda</div>
+    <h2>What we cover today</h2>
+    <div class="subtitle">&nbsp;</div>
+    <div class="num-grid">
+      <div class="num-card"><span class="n">01</span><div><div class="t">{{AGENDA_1}}</div></div></div>
+      <div class="num-card"><span class="n">02</span><div><div class="t">{{AGENDA_2}}</div></div></div>
+      <div class="num-card"><span class="n">03</span><div><div class="t">{{AGENDA_3}}</div></div></div>
+      <div class="num-card"><span class="n">04</span><div><div class="t">{{AGENDA_4}}</div></div></div>
+    </div>
+  </section>
+
+{{CONTENT_SLIDES}}
+
+  <!-- SLIDE {{TOTAL}} -->
+  <section class="slide closing">
+    <div class="next-video-tag">Next video</div>
+    <h2>{{NEXT_TITLE}}</h2>
+    <p class="tagline">{{NEXT_TAGLINE}}</p>
+    <div class="cta-row">
+      <div class="cta-card"><div class="t">Subscribe</div><div class="d">New video every week</div></div>
+      <div class="cta-card"><div class="t">Comments</div><div class="d">Questions answered below</div></div>
+    </div>
+    <div class="footer-tag">Learn Claude Code the Right Way &nbsp;&middot;&nbsp; Series Playlist</div>
+  </section>
+
+</div>
+
+<div class="deck-nav">
+  <button class="nav-btn" id="prevBtn">&larr; Prev</button>
+  <div class="dots" id="dots"></div>
+  <button class="nav-btn" id="nextBtn">Next &rarr;</button>
+</div>
+
+<script>
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+let current = 0;
+
+const dotsEl = document.getElementById('dots');
+slides.forEach((_, i) => {
+  const dot = document.createElement('button');
+  dot.className = 'dot' + (i === 0 ? ' active' : '');
+  dot.addEventListener('click', () => goTo(i));
+  dotsEl.appendChild(dot);
+});
+const dots = document.querySelectorAll('.dot');
+
+document.getElementById('slideTotal').textContent = total;
+
+function render() {
+  slides.forEach((s, i) => s.classList.toggle('active', i === current));
+  dots.forEach((d, i) => d.classList.toggle('active', i === current));
+  document.getElementById('slideNum').textContent = current + 1;
+  document.getElementById('progressFill').style.width = ((current + 1) / total * 100) + '%';
+  document.getElementById('prevBtn').disabled = current === 0;
+  document.getElementById('nextBtn').disabled = current === total - 1;
+}
+
+function goTo(i) {
+  current = Math.max(0, Math.min(total - 1, i));
+  render();
+}
+
+document.getElementById('prevBtn').addEventListener('click', () => goTo(current - 1));
+document.getElementById('nextBtn').addEventListener('click', () => goTo(current + 1));
+
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') { e.preventDefault(); goTo(current + 1); }
+  if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); goTo(current - 1); }
+  if (e.key === 'Home') goTo(0);
+  if (e.key === 'End') goTo(total - 1);
+});
+
+render();
+</script>
+
+</body>
+</html>
