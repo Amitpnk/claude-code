@@ -8,6 +8,7 @@ import { projects, tasks, users } from "./schema";
 const DEMO_USERS = [
   { email: "amit@taskflow.dev", password: "taskflow123" },
   { email: "dev@taskflow.dev", password: "taskflow456" },
+  { email: "test@test.dev", password: "test123" },
 ];
 
 async function main() {

@@ -60,10 +60,14 @@ Reset first, using the same statement the tests use in `beforeAll`:
 
 ```bash
 docker compose up -d
-docker compose exec -T postgres psql -U postgres -d taskflow \
+docker compose exec -T postgres psql -U taskflow -d taskflow \
   -c "TRUNCATE TABLE tasks, projects, sessions, users RESTART IDENTITY CASCADE;"
 npm run db:seed
 ```
+
+The user is `taskflow`, not `postgres` — `docker-compose.yml` sets `POSTGRES_USER: taskflow`,
+so there is no `postgres` role in this container and `-U postgres` fails with
+`role "postgres" does not exist`.
 
 `RESTART IDENTITY` matters: without it, ids keep climbing and the seeded projects stop being
 `/projects/1` and `/projects/2`, which breaks any bookmark, screenshot or recorded demo that
