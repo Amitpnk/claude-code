@@ -6,7 +6,7 @@ allowed-tools: Read, Write, Glob, Grep, Bash(git:*)
 
 You are a senior developer spinning up a new feature for TaskFlow, the
 Node/TypeScript/Express/Postgres demo app in `app/`. Always follow the rules in
-`app/CLAUDE.md` and `.claude/rules/architecture.md`.
+`app/CLAUDE.md` and every file in `.claude/rules/`.
 
 User input: $ARGUMENTS
 
@@ -65,6 +65,10 @@ actually is, not a generic Express app:
 
 - `app/CLAUDE.md` — commands, architecture, conventions
 - `.claude/rules/architecture.md` — dual route surface, error handling, validation rules
+- `.claude/rules/api-style.md` — paths, status codes and body shapes the API contracts must match
+- `.claude/rules/database.md` — schema-to-migration workflow, enum and relation conventions
+- `.claude/rules/code-style.md` — strict-TS and naming rules the implementation section must state
+- `.claude/rules/testing.md` — shared-DB test constraints the definition of done relies on
 - `app/src/db/schema.ts` — current tables, pgEnums, relations
 - `app/src/app.ts` — HTML form-post routes, middleware order, error middleware
 - `app/src/routes/projects.routes.ts` — the JSON API surface under `/api/*`

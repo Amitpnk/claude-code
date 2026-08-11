@@ -12,7 +12,8 @@ Live site: https://amitpnk.github.io/claude-code-mastery/
 
 ## Repo layout
 
-This repo has two independent parts — there is no shared build or dependency graph between them:
+This repo has two independent parts — there is no shared build or dependency graph between them —
+plus the Claude Code configuration that applies to both:
 
 - **`docs/`** — the static GitHub Pages site itself: `docs/index.html` is the landing page listing
   all episodes (each entry has `status`, `youtube`, `article`, `slides` fields), and
@@ -22,6 +23,9 @@ This repo has two independent parts — there is no shared build or dependency g
   CLAUDE.md, Skills, SubAgents, Spec-Driven Development, Plan Mode, MCP, and Hooks across the
   series. Has its own dependencies, tests, and conventions — see **[app/CLAUDE.md](app/CLAUDE.md)**
   before making any change under `app/`.
+- **`.claude/`** — the Claude Code configuration this repo ships with: shared permissions,
+  the `/create-spec` command, the `add-task-field` skill, topic rules, and feature specs.
+  See **[.claude/README.md](.claude/README.md)** for what each subfolder is and when it loads.
 
 When a task touches `app/`, treat `app/CLAUDE.md` as the authoritative guide for commands and
 architecture; this file only covers the repo as a whole.

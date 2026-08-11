@@ -1,0 +1,65 @@
+# `.claude/`
+
+Everything in this folder configures how Claude Code behaves in this repo. Each subfolder
+is loaded by a different mechanism, at a different time — that distinction is the whole
+point of the layout, so it's worth knowing which is which.
+
+| Path | Loaded | By what |
+|---|---|---|
+| `settings.json` | every session | Claude Code, automatically. Team-shared, committed. |
+| `settings.local.json` | every session | Same, but personal. Gitignored — create it yourself if you want local overrides. |
+| `commands/` | on invocation | You type `/create-spec …`. Nothing loads until then. |
+| `skills/` | on match | Claude picks a skill when the request matches its `description`, or you name it. |
+| `rules/` | on demand | **Not** auto-loaded. Read only when something points at it — see below. |
+| `specs/` | on demand | Project content, not config. Written by `/create-spec`, read when implementing. |
+
+Note the root [`CLAUDE.md`](../CLAUDE.md) and [`app/CLAUDE.md`](../app/CLAUDE.md) are the
+only files loaded into *every* session automatically. Everything here is either explicitly
+invoked or explicitly referenced.
+
+## `settings.json`
+
+Permissions shared by everyone working in this repo: an allowlist of read-only commands
+that shouldn't need a prompt (`npm run lint`, `git diff`, …) and a denylist for `.env`
+files so secrets are never read into context. `.env.example` stays readable on purpose.
+
+Personal overrides go in `settings.local.json`, which is gitignored. Later sources win:
+`~/.claude/settings.json` → `.claude/settings.json` → `.claude/settings.local.json`.
+
+## `commands/`
+
+One markdown file per slash command. Frontmatter declares `description`, `argument-hint`,
+and `allowed-tools`; the body is the prompt, with `$ARGUMENTS` substituted in.
+
+- [`create-spec.md`](commands/create-spec.md) — `/create-spec <feature>` creates a feature
+  branch and writes a full spec to `specs/`. It does not implement anything.
+
+## `skills/`
+
+One folder per skill, each containing a `SKILL.md` whose frontmatter `name` matches the
+folder name. The `description` is what Claude matches against, so it should name the
+trigger phrases, not just the topic.
+
+- [`add-task-field/`](skills/add-task-field/SKILL.md) — the correct order for adding a
+  column to `tasks`/`projects`: schema → migration → API → view → seed → test → verify.
+
+## `rules/`
+
+Topic-scoped constraints, kept out of `CLAUDE.md` so they load only when relevant. Nothing
+reads these automatically — they reach Claude because `commands/create-spec.md` names them
+in its research step, or because you `@`-mention one in a prompt.
+
+- [`architecture.md`](rules/architecture.md) — dual route surface, error handling, shared validation
+- [`api-style.md`](rules/api-style.md) — the HTTP contract for `/api/*`: paths, status codes, body shapes
+- [`database.md`](rules/database.md) — schema-to-migration workflow, enum and relation conventions
+- [`code-style.md`](rules/code-style.md) — Prettier/ESLint boundaries, strict-TS rules, naming
+- [`testing.md`](rules/testing.md) — the shared-database traps in the test suite
+
+Keep these as *rules* — things a change can violate. Descriptive explanation of how the
+app works belongs in `app/CLAUDE.md`, which is always loaded.
+
+## `specs/`
+
+Feature specs, numbered and kebab-cased (`01-login-logout.md`). Output of `/create-spec`,
+input to Plan Mode. These are project artifacts rather than configuration — Claude Code
+has no built-in meaning for this folder.

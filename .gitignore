@@ -3,3 +3,6 @@ Thumbs.db
 .vscode/
 *.log
 ~$*.pptx
+
+# Claude Code personal overrides (never committed)
+.claude/settings.local.json
