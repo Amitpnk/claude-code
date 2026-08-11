@@ -49,6 +49,9 @@ trigger phrases, not just the topic.
 - [`audit-routes/`](skills/audit-routes/SKILL.md) — check the HTML and `/api/*` surfaces in
   `app/` for drift: validation on one surface but not the other, inline error responses,
   unguarded id parsing, duplicated helpers.
+- [`seed-refresh/`](skills/seed-refresh/SKILL.md) — check `app/src/db/seed.ts` covers every enum
+  value, optional column and collection shape the views branch on. The small one; a good first
+  skill to read.
 - [`new-episode-deck/`](skills/new-episode-deck/SKILL.md) — build or check a slide deck in
   `docs/slides/`. Scaffolds from the house template, then validates numbering, tag balance
   and image refs.
