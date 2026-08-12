@@ -184,21 +184,33 @@ def audit(root):
                     "never rendered".format(table, field),
                 )
 
-    # 3. parent rows with zero and with exactly one child
+    # 3. parent rows with zero and with exactly one child.
+    #
+    # A project with no tasks is never referenced in the tasks insert, so it
+    # cannot be a *used* destructured variable without tripping no-unused-vars.
+    # Counting the rows in the projects values block instead of only the
+    # destructured names lets a zero-task project be seeded without one.
     match = DESTRUCTURE_RE.search(seed)
-    if match:
+    total_projects = 0
+    for table, rows, _line in blocks:
+        if table == "projects":
+            total_projects = len(rows)
+    if match and total_projects:
         parents = [n.strip() for n in match.group(1).split(",") if n.strip()]
         counts = {}
         for parent in parents:
             counts[parent] = len(re.findall(r"projectId:\s*{0}\.id".format(parent), seed))
+        named_with_tasks = sum(1 for c in counts.values() if c > 0)
+        childless = total_projects - named_with_tasks
         line = line_at(seed, match.start())
-        if parents and not any(c == 0 for c in counts.values()):
+
+        if childless <= 0:
             add(
                 "app/src/db/seed.ts:{0}".format(line),
                 "seed/collection-shapes",
                 "every seeded project has tasks - the empty task list is never rendered",
             )
-        if parents and not any(c == 1 for c in counts.values()):
+        if not any(c == 1 for c in counts.values()):
             add(
                 "app/src/db/seed.ts:{0}".format(line),
                 "seed/collection-shapes",
@@ -206,8 +218,11 @@ def audit(root):
                 "rendered",
             )
         notes.append(
-            "tasks per project: "
-            + ", ".join("{0}={1}".format(p, counts[p]) for p in parents)
+            "{0} project(s) seeded; tasks per named project: {1}; with no tasks: {2}".format(
+                total_projects,
+                ", ".join("{0}={1}".format(p, counts[p]) for p in parents),
+                childless,
+            )
         )
 
     # 4. every enum value has a badge style

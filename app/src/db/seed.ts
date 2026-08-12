@@ -9,6 +9,8 @@ const DEMO_USERS = [
   { email: "amit@taskflow.dev", password: "taskflow123" },
   { email: "dev@taskflow.dev", password: "taskflow456" },
   { email: "test@test.dev", password: "test123" },
+  { email: "check@taskflow.dev", password: "test123" },
+  { email: "check2@taskflow.dev", password: "test123" },
 ];
 
 async function main() {
@@ -21,11 +23,15 @@ async function main() {
     ),
   );
 
-  const [website, mobile] = await db
+  const [website, mobile, archive] = await db
     .insert(projects)
     .values([
       { name: "Website Redesign", description: "Refresh the marketing site" },
       { name: "Mobile App", description: "TaskFlow companion app" },
+      // No description: exercises the falsy branch in dashboard.ejs and project.ejs.
+      { name: "Archive" },
+      // Left without tasks: exercises the empty task list in project.ejs.
+      { name: "Inbox", description: "Unsorted work" },
     ])
     .returning();
 
@@ -35,6 +41,10 @@ async function main() {
     { projectId: website.id, title: "Write copy", status: "todo", priority: "low" },
     { projectId: mobile.id, title: "Set up project skeleton", status: "done", priority: "medium" },
     { projectId: mobile.id, title: "Design onboarding flow", status: "todo", priority: "high" },
+    // Archive's only task, so the singular "1 task" label renders. Status and
+    // priority are omitted rather than set, so the database defaults apply --
+    // the same path a task created through the UI takes.
+    { projectId: archive.id, title: "Decide what to keep" },
   ]);
 
   console.log("Seeded sample projects and tasks.");

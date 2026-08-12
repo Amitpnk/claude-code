@@ -55,6 +55,12 @@ trigger phrases, not just the topic.
 - [`new-episode-deck/`](skills/new-episode-deck/SKILL.md) — build or check a slide deck in
   `docs/slides/`. Scaffolds from the house template, then validates numbering, tag balance
   and image refs.
+- [`commit-message/`](skills/commit-message/SKILL.md) — write the commit message for a change:
+  Conventional Commits type, this repo's scope vocabulary, imperative subject, a body that
+  says why. One script maps changed paths to a scope, another validates the finished message.
+- [`review-pr/`](skills/review-pr/SKILL.md) — review a PR or branch against `rules/` before it
+  merges. Its script routes each changed area to the rules file and checker that governs it,
+  so the review composes the other skills rather than repeating them.
 
 `add-task-field` and `audit-routes` make a matched pair worth demoing together — one builds,
 the other checks what was built. Neither knows about the other; Claude picks whichever the
