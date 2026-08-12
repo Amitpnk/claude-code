@@ -31,7 +31,8 @@ TYPES = [
     "revert",
 ]
 
-# Kept in sync with scripts/suggest_scope.py. See resources/commit-conventions.md.
+# Kept in sync with the scope table in SKILL.md - adding one here without adding
+# it there gives you a checker that accepts a scope nobody documented.
 SCOPES = [
     "app",
     "db",

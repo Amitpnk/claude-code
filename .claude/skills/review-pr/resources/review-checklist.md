@@ -1,8 +1,8 @@
 # Review checklist
 
 What to look for per area. The authority is `.claude/rules/` — this is the reading order,
-not a second set of rules. `scripts/review_scope.py` tells you which of these sections
-apply to the diff in front of you.
+not a second set of rules. The routing table in `SKILL.md` tells you which of these sections
+apply to the diff in front of you — read those, not all of them.
 
 ## Read in this order
 
